@@ -89,6 +89,7 @@ int main()
 	std::cout << autUnion.DumpToString(*serializer, stateDictUnion) << "\n";
 
 	// compute the intersection automaton
+    /*
 	Automaton::ProductTranslMap prodTranslMap;
 	Automaton autIsect = Automaton::Intersection(aut1, aut2, &prodTranslMap);
 	VATA::AutBase::StateDict stateDictIsect =
@@ -101,5 +102,6 @@ int main()
 
 	// check inclusions
 	std::cout << "intersection <= union: " << Automaton::CheckInclusion(autIsect, autUnion) << "\n";
-	std::cout << "union <= intersection: " << Automaton::CheckInclusion(autUnion, autIsect) << "\n";
+    */
+	//std::cout << "union <= intersection: " << Automaton::CheckInclusion(autUnion, autIsect) << "\n";
 }

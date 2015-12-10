@@ -675,7 +675,7 @@ ExplicitTreeAut ExplicitTreeAut::UnionDisjointStates(
 		CoreAut::UnionDisjointStates(*lhs.core_, *rhs.core_));
 }
 
-
+/*
 ExplicitTreeAut ExplicitTreeAut::Intersection(
 	const ExplicitTreeAut&            lhs,
 	const ExplicitTreeAut&            rhs,
@@ -687,6 +687,7 @@ ExplicitTreeAut ExplicitTreeAut::Intersection(
 	return ExplicitTreeAut(
 		CoreAut::Intersection(*lhs.core_, *rhs.core_, pTranslMap));
 }
+*/
 
 ExplicitTreeAut ExplicitTreeAut::IntersectionBU(
 	const ExplicitTreeAut&            lhs,

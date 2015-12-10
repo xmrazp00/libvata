@@ -758,11 +758,11 @@ public:   // methods
 	 *
 	 * @returns  An automaton accepting the intersection of languages of @p lhs
 	 * and @p rhs
-     */
 	static ExplicitTreeAut Intersection(
 		const ExplicitTreeAut&            lhs,
 		const ExplicitTreeAut&            rhs,
 		AutBase::ProductTranslMap*        pTranslMap = nullptr);
+     */
 
 
 	/**
