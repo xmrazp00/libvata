@@ -113,10 +113,11 @@ public:   // public data types
 	class AbstractCopyF
 	{
 	public:
-		virtual bool operator()(const Transition&) = 0;
+//		virtual bool operator()(const Transition&) = 0;
 
 		virtual ~AbstractCopyF()
 		{ }
+        
 	};
 
 
@@ -136,6 +137,7 @@ public:   // public data types
 
 		virtual ~AbstractAlphabet()
 		{ }
+   
 	};
 
 
@@ -176,9 +178,10 @@ public:   // public data types
 		{
 			return symbolDict_;
 		}
-
+/*
 		virtual ~OnTheFlyAlphabet() override
 		{ }
+ */
 	};
 
 	class DirectAlphabet : public AbstractAlphabet
@@ -190,7 +193,7 @@ public:   // public data types
 
 		class DirectBackTranslator : public BwdTranslator
 		{
-			virtual StringSymbolType operator()(const SymbolType& value) override
+/*			virtual StringSymbolType operator()(const SymbolType& value) override
 			{
 				return const_cast<const DirectBackTranslator*>(this)->operator()(value);
 			}
@@ -199,11 +202,12 @@ public:   // public data types
 			{
 				return StringSymbolType(VATA::Util::Convert::ToString(value), 0);
 			}
+ */
 		};
 
 	public:  // methods
 
-		virtual FwdTranslatorPtr GetSymbolTransl() override
+/*		virtual FwdTranslatorPtr GetSymbolTransl() override
 		{
 			throw NotImplementedException(__func__);
 		}
@@ -215,6 +219,7 @@ public:   // public data types
 
 		virtual ~DirectAlphabet() override
 		{ }
+  */
 	};
 
 	/**
@@ -225,10 +230,11 @@ public:   // public data types
 	class AbstractSymbolTranslateF
 	{
 	public:
-		virtual SymbolType operator()(const SymbolType&) = 0;
+/*		virtual SymbolType operator()(const SymbolType&) = 0;
 
 		virtual ~AbstractSymbolTranslateF()
 		{ }
+ */
 	};
 
 	using AlphabetType = std::shared_ptr<AbstractAlphabet>;
@@ -237,17 +243,17 @@ public:   // public data types
 	{
 	private:  // data types
 
-		using CoreIterator  = ExplicitTreeAutCoreUtil::Iterator;
+//  	using CoreIterator  = ExplicitTreeAutCoreUtil::Iterator;
 
 	private:  // data members
 
 		/**
 		 * @brief  Pointer to iterator in the core automaton
 		 */
-		std::unique_ptr<CoreIterator> coreIter_;
+//		std::unique_ptr<CoreIterator> coreIter_;
 
 	public:   // methods
-
+/*
 		Iterator(const Iterator& iter);
 		explicit Iterator(const CoreIterator& coreIter);
 		~Iterator();
@@ -256,6 +262,7 @@ public:   // public data types
 		bool operator!=(const Iterator& rhs) const;
 		Iterator& operator++();
 		Transition operator*() const;
+    */
 	};
 
 	using iterator       = Iterator;
@@ -273,10 +280,10 @@ public:   // public data types
 
 		private:  // data types
 
-			std::unique_ptr<CoreIterator> coreAcceptTransIter_;
+//			std::unique_ptr<CoreIterator> coreAcceptTransIter_;
 
 		public:   // methods
-
+/*
 			explicit Iterator(const ExplicitTreeAut& aut);
 			explicit Iterator(const CoreIterator& coreIter);
 			Iterator(const Iterator& iter);
@@ -285,7 +292,7 @@ public:   // public data types
 			bool operator==(const Iterator& rhs) const;
 			bool operator!=(const Iterator& rhs) const;
 			Transition operator*() const;
-
+*/
 			/**
 			 * @brief  Prefix increment operator
 			 */
@@ -300,11 +307,11 @@ public:   // public data types
 
 	private:  // data members
 
-		std::unique_ptr<CoreAcceptTrans> coreAcceptTrans_;
+//		std::unique_ptr<CoreAcceptTrans> coreAcceptTrans_;
 
 	public:   // methods
 
-		explicit AcceptTrans(
+/*		explicit AcceptTrans(
 			const CoreAcceptTrans&       coreAcceptTrans);
 
 		AcceptTrans(
@@ -314,7 +321,8 @@ public:   // public data types
 
 		Iterator begin() const;
 		Iterator end() const;
-	};
+*/
+    };
 
 
 	class DownAccessor
@@ -329,23 +337,24 @@ public:   // public data types
 
 		private:  // data types
 
-			std::unique_ptr<CoreIterator> coreDownAccessIter_;
+//			std::unique_ptr<CoreIterator> coreDownAccessIter_;
 
 		public:   // methods
-
+/*
 			explicit Iterator(const ExplicitTreeAut& aut);
 			explicit Iterator(const CoreIterator& coreIter);
 			Iterator(const Iterator& iter);
-			~Iterator();
-
+*/
+//			~Iterator();
+/*
 			bool operator==(const Iterator& rhs) const;
 			bool operator!=(const Iterator& rhs) const;
 			Transition operator*() const;
-
+*/
 			/**
 			 * @brief  Prefix increment operator
 			 */
-			Iterator& operator++();
+//			Iterator& operator++();
 		};
 
 		using iterator         = Iterator;
@@ -355,22 +364,22 @@ public:   // public data types
 
 	private:  // data members
 
-		std::unique_ptr<CoreDownAccessor> coreDownAccessor_;
+//		std::unique_ptr<CoreDownAccessor> coreDownAccessor_;
 
 	public:   // methods
 
-		explicit DownAccessor(
+/*		explicit DownAccessor(
 			const CoreDownAccessor&      coreDownAccessor);
-
-		DownAccessor(
+*/
+/*		DownAccessor(
 			DownAccessor&&               downAccessor);
-
-		~DownAccessor();
-
+*/
+//		~DownAccessor();
+/*
 		Iterator begin() const;
 		Iterator end() const;
-
-		bool empty() const;
+*/
+//		bool empty() const;
 	};
 
 
@@ -386,15 +395,15 @@ public:   // methods
 	        bool                   copyTrans = true,
 	        bool                   copyFinal = true);
 	ExplicitTreeAut(ExplicitTreeAut&& aut);
-
+/*
 	ExplicitTreeAut& operator=(const ExplicitTreeAut& rhs);
 	ExplicitTreeAut& operator=(ExplicitTreeAut&& rhs);
-
+*/
 	~ExplicitTreeAut();
 
 	explicit ExplicitTreeAut(CoreAut&& core);
 
-
+/*
 	static StringSymbolType ToStringSymbolType(const std::string& str, size_t rank)
 	{
 		return StringRank(str, rank);
@@ -404,15 +413,15 @@ public:   // methods
 	{
 		return 0;
 	}
-
+*/
 	/**
 	 * @brief  Sets a state as an accepting state
 	 *
 	 * @param[in]  state  The state to be set as accepting
 	 */
-	void SetStateFinal(const StateType& state);
+//	void SetStateFinal(const StateType& state);
 
-	void SetStatesFinal(const std::set<StateType>& states);
+//	void SetStatesFinal(const std::set<StateType>& states);
 
 	/**
 	 * @brief  Checks whether a state is accepting
@@ -421,38 +430,38 @@ public:   // methods
 	 *
 	 * @returns  @p true in the case @p state is accepting, @p false otherwise
 	 */
-	bool IsStateFinal(const StateType& state) const;
+//	bool IsStateFinal(const StateType& state) const;
 
 	/**
 	 * @brief  Retrieves the set of accepting states
 	 *
 	 * @returns  The set of accepting states of the automaton
 	 */
-	const FinalStateSet& GetFinalStates() const;
+//	const FinalStateSet& GetFinalStates() const;
 
 	/**
 	 * @brief  Clears the set of final states
 	 */
-	void EraseFinalStates();
+//	void EraseFinalStates();
 
 	/**
 	 * @brief  Retrieves a container with accepting transitions
 	 *
 	 * @returns  An (iterable) container with accepting transitions
 	 */
-	AcceptTrans GetAcceptTrans() const;
+//	AcceptTrans GetAcceptTrans() const;
 
   /**
     * @brief Retrieves a container with all states of the automaton
     *
     * @return A vector with all used states
     */
-  std::unordered_set<size_t> GetUsedStates() const;
+//  std::unordered_set<size_t> GetUsedStates() const;
 
   /**
     * @brief Clears automaton. It clears its final states and trasitions.
     */
-  void Clear();
+  // void Clear();
 
 	/**
 	 * @brief  Retrieves the transitions where the state is a parent
@@ -464,9 +473,9 @@ public:   // methods
 	 *
 	 * @returns  A container of transitions going from @p state down
 	 */
-	DownAccessor GetDown(
+/*	DownAccessor GetDown(
 		const StateType&          state) const;
-
+*/
 	/**
 	 * @brief  Retrieves the transitions where the state is a parent
 	 *
@@ -477,7 +486,7 @@ public:   // methods
 	 *
 	 * @returns  A container of transitions going from @p state down
 	 */
-	DownAccessor operator[](
+/*	DownAccessor operator[](
 		const StateType&          state) const;
 
 	void AddTransition(
@@ -504,7 +513,7 @@ public:   // methods
 
 	const AlphabetType& GetAlphabet() const;
 
-
+*/
 	/**
 	 * @brief  Reduces the automaton while preserving its language
 	 *
@@ -513,8 +522,8 @@ public:   // methods
 	 *
 	 * @returns  An automaton which is a reduced version of the current object
 	 */
-	ExplicitTreeAut Reduce() const;
-
+/*	ExplicitTreeAut Reduce() const;
+*/
 
 	/**
 	 * @brief  Reduces the automaton while preserving its language
@@ -527,9 +536,9 @@ public:   // methods
 	 * @returns  An automaton which is a reduced version of the current object
 	 *            w.r.t. the parameters
 	 */
-	ExplicitTreeAut Reduce(
+/*	ExplicitTreeAut Reduce(
 		const VATA::ReduceParam&    params) const;
-
+*/
 
 	/**
 	 * @brief  Collapses states according to the passed map
@@ -543,7 +552,7 @@ public:   // methods
 	 *
 	 * @returns  An automaton with states collapsed according to @p collapseMap
 	 */
-	ExplicitTreeAut CollapseStates(
+/*	ExplicitTreeAut CollapseStates(
 		const StateToStateMap&      collapseMap) const;
 
 
@@ -592,19 +601,19 @@ public:   // methods
 
 
 	void SetAlphabet(AlphabetType& alphabet);
-
-
+*/
+/*
 	std::string DumpToString(
 		VATA::Serialization::AbstrSerializer&     serializer,
 		const std::string&                        params = "") const;
-
+*/
 
 	std::string DumpToString(
 		VATA::Serialization::AbstrSerializer&     serializer,
 		const StateDict&                          stateDict,
 		const std::string&                        params = "") const;
 
-
+/*
 	std::string DumpToString(
 		VATA::Serialization::AbstrSerializer&     serializer,
 		const StateBackTranslStrict&              stateTransl,
@@ -624,12 +633,13 @@ public:   // methods
 		const StateBackTranslStrict&              stateTransl,
 		const std::string&                        params = "") const;
 
-
+*/
+/*
 	iterator begin();
 	iterator end();
 	const_iterator begin() const;
 	const_iterator end() const;
-
+*/
 
 	template <
 		class TranslIndex,
@@ -639,6 +649,7 @@ public:   // methods
 		SanitizeIndex          /*sanitizeIndex*/)
 	{
 		throw NotImplementedException(__func__);
+
 
 #if 0
 		std::string res;
@@ -668,43 +679,43 @@ public:   // methods
 #endif
 	}
 
-
+/*
 	void LoadFromString(
 		VATA::Parsing::AbstrParser&       parser,
 		const std::string&                str,
 		const std::string&                params = "");
 
-
+*/
 	void LoadFromString(
 		VATA::Parsing::AbstrParser&       parser,
 		const std::string&                str,
 		StateDict&                        stateDict,
 		const std::string&                params = "");
 
-
+/*
 	void LoadFromString(
 		VATA::Parsing::AbstrParser&       parser,
 		const std::string&                str,
 		StringToStateTranslWeak&          stateTransl,
 		const std::string&                params = "");
 
-
+*/ /*
 	void LoadFromAutDesc(
 		const VATA::Util::AutDescription&   desc,
 		const std::string&                  params = "");
-
+*/
 
 	void LoadFromAutDesc(
 		const VATA::Util::AutDescription&   desc,
 		StateDict&                          stateDict,
 		const std::string&                  params = "");
 
-
+/*
 	void LoadFromAutDesc(
 		const VATA::Util::AutDescription&   desc,
 		StringToStateTranslWeak&            stateTransl,
 		const std::string&                  params = "");
-
+*/
 
 	/**
 	 * @brief  Unites a pair of automata
@@ -778,11 +789,11 @@ public:   // methods
 	 * @returns  An automaton accepting the intersection of languages of @p lhs
 	 * and @p rhs
      */
-	static ExplicitTreeAut IntersectionBU(
+/*	static ExplicitTreeAut IntersectionBU(
 		const ExplicitTreeAut&            lhs,
 		const ExplicitTreeAut&            rhs,
 		AutBase::ProductTranslMap*        pTranslMap = nullptr);
-
+*/
 
 	/**
 	 * @brief  Dispatcher for calling correct inclusion checking function
@@ -798,11 +809,11 @@ public:   // methods
 	 * @returns  @p true if the language of @p smaller is a subset of the language
 	 *           of @p bigger, @p false otherwise
 	 */
-	static bool CheckInclusion(
+/*	static bool CheckInclusion(
 		const ExplicitTreeAut&                 smaller,
 		const ExplicitTreeAut&                 bigger,
 		const VATA::InclParam&                 params);
-
+*/
 
 	/**
 	 * @brief  Checks inclusion using default parameters
@@ -816,10 +827,10 @@ public:   // methods
 	 * @returns  @p true if the language of @p smaller is a subset of the language
 	 *           of @p bigger, @p false otherwise
 	 */
-	static bool CheckInclusion(
+/*	static bool CheckInclusion(
 		const ExplicitTreeAut&                 smaller,
 		const ExplicitTreeAut&                 bigger);
-
+*/
 
 	/**
 	 * @brief  Computes the specified simulation relation on the automaton
@@ -833,9 +844,9 @@ public:   // methods
 	 *
 	 * @returns  The computed simulation relation, as a matrix indexed from 0
 	 */
-	AutBase::StateDiscontBinaryRelation ComputeSimulation(
+/*	AutBase::StateDiscontBinaryRelation ComputeSimulation(
 		const VATA::SimParam&                  params) const;
-
+*/
 
 	/**
 	 * @brief  Computes the complement of the automaton
@@ -845,7 +856,7 @@ public:   // methods
 	 *
 	 * @returns  The complement of the automaton
 	 */
-	ExplicitTreeAut Complement() const;
+//	ExplicitTreeAut Complement() const;
 
 
 	/**
@@ -856,7 +867,7 @@ public:   // methods
 	 * @returns  @p true if the language of the automaton is empty, @p false
 	 *           otherwise
 	 */
-	bool IsLangEmpty() const;
+//	bool IsLangEmpty() const;
 
 	/**
 	 * @brief  Translates all symbols according to a translator
@@ -868,10 +879,12 @@ public:   // methods
 	 *
 	 * @returns  The automaton with symbols in transitions changed
 	 */
-	ExplicitTreeAut TranslateSymbols(
+
+  /*  ExplicitTreeAut TranslateSymbols(
 		AbstractSymbolTranslateF&       transl) const;
 
 	std::string ToString(const Transition& trans) const;
+    */
 };
 
 #endif

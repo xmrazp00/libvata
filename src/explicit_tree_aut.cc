@@ -19,7 +19,7 @@ using VATA::AutBase;
 using VATA::ExplicitTreeAut;
 using VATA::Util::AutDescription;
 
-
+/*
 ExplicitTreeAut::Iterator::Iterator(const Iterator& iter) :
 	coreIter_(new CoreIterator(*iter.coreIter_))
 {
@@ -126,33 +126,29 @@ ExplicitTreeAut::AcceptTrans::Iterator ExplicitTreeAut::AcceptTrans::end() const
 	return Iterator(coreAcceptTrans_->end());
 }
 
-
 ExplicitTreeAut::Transition ExplicitTreeAut::AcceptTrans::Iterator::operator*() const
 {
 	assert(nullptr != coreAcceptTransIter_);
 
 	return **coreAcceptTransIter_;
 }
-
-
+*/
 ExplicitTreeAut::ExplicitTreeAut() :
 	core_(new CoreAut(CoreAut::ParentAut()))
 { }
-
 
 ExplicitTreeAut::ExplicitTreeAut(
 	CoreAut&&                    core) :
 	core_(new CoreAut(std::move(core)))
 { }
 
-
+/*
 ExplicitTreeAut::ExplicitTreeAut(
 	const ExplicitTreeAut&         aut,
 	bool                           copyTrans,
 	bool                           copyFinal) :
 	core_(new CoreAut(*aut.core_, copyTrans, copyFinal))
 { }
-
 
 ExplicitTreeAut& ExplicitTreeAut::operator=(
 	const ExplicitTreeAut&         aut)
@@ -187,12 +183,12 @@ ExplicitTreeAut& ExplicitTreeAut::operator=(
 
 	return *this;
 }
-
+*/
 
 ExplicitTreeAut::~ExplicitTreeAut()
 { }
 
-
+/*
 void ExplicitTreeAut::SetAlphabet(AlphabetType& alphabet)
 {
 	assert(nullptr != core_);
@@ -488,7 +484,7 @@ void ExplicitTreeAut::LoadFromString(
 
 	core_->LoadFromString(parser, str, stateTransl, params);
 }
-
+*/
 
 void ExplicitTreeAut::LoadFromString(
 	VATA::Parsing::AbstrParser&      parser,
@@ -512,7 +508,7 @@ void ExplicitTreeAut::LoadFromAutDesc(
 	core_->LoadFromAutDesc(desc, stateDict, params);
 }
 
-
+/*
 std::string ExplicitTreeAut::DumpToString(
 	VATA::Serialization::AbstrSerializer&     serializer,
 	const std::string&                        params) const
@@ -521,7 +517,7 @@ std::string ExplicitTreeAut::DumpToString(
 
 	return core_->DumpToString(serializer, params);
 }
-
+*/
 
 std::string ExplicitTreeAut::DumpToString(
 	VATA::Serialization::AbstrSerializer&     serializer,
@@ -533,7 +529,7 @@ std::string ExplicitTreeAut::DumpToString(
 	return core_->DumpToString(serializer, stateDict, params);
 }
 
-
+/*
 std::string ExplicitTreeAut::DumpToString(
 	VATA::Serialization::AbstrSerializer&  serializer,
 	const StateBackTranslStrict&           stateTransl,
@@ -648,7 +644,7 @@ ExplicitTreeAut ExplicitTreeAut::GetCandidateTree() const
 
 	return ExplicitTreeAut(core_->GetCandidateTree());
 }
-
+*/
 
 ExplicitTreeAut ExplicitTreeAut::Union(
 	const ExplicitTreeAut&                lhs,
@@ -688,7 +684,7 @@ ExplicitTreeAut ExplicitTreeAut::Intersection(
 		CoreAut::Intersection(*lhs.core_, *rhs.core_, pTranslMap));
 }
 */
-
+/*
 ExplicitTreeAut ExplicitTreeAut::IntersectionBU(
 	const ExplicitTreeAut&            lhs,
 	const ExplicitTreeAut&            rhs,
@@ -707,6 +703,7 @@ bool ExplicitTreeAut::IsLangEmpty() const
 
 	return core_->IsLangEmpty();
 }
+
 
 AutBase::StateDiscontBinaryRelation ExplicitTreeAut::ComputeSimulation(
 	const VATA::SimParam&                  params) const
@@ -788,4 +785,4 @@ ExplicitTreeAut ExplicitTreeAut::Complement() const
 	assert(nullptr != core_);
 
 	return ExplicitTreeAut(core_->Complement());
-}
+}*/

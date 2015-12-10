@@ -86,7 +86,7 @@ int main()
 
 	// dump the union automaton
 	std::cout << "Union\n=====\n";
-	std::cout << autUnion.DumpToString(*serializer, stateDictUnion) << "\n";
+    std::cout << autUnion.DumpToString(*serializer, stateDictUnion) << "\n";
 
 	// compute the intersection automaton
     /*

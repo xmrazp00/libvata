@@ -31,7 +31,7 @@ int main()
 	Automaton aut;
 	aut.LoadFromString(*parser, autStr, stateDict);
 
-	VATA::SimParam sp;
+/*	VATA::SimParam sp;
 	sp.SetRelation(SimParam::e_sim_relation::TA_DOWNWARD);
 	sp.SetNumStates(stateDict.size());
 	Rel sim = aut.ComputeSimulation(sp);
@@ -53,4 +53,5 @@ int main()
 	}
 
 	std::cout << "total = " << c << "\n";
+    */
 }
