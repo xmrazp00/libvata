@@ -30,7 +30,7 @@ ExplicitTreeAutCore::TupleCache ExplicitTreeAutCore::globalTupleCache_;
 ExplicitTreeAutCore::AlphabetType ExplicitTreeAutCore::globalAlphabet_ =
 	AlphabetType(new ExplicitTreeAut::OnTheFlyAlphabet);
 
-
+/*
 std::unordered_set<size_t> ExplicitTreeAutCore::GetUsedStates() const
 {
 	std::unordered_set<size_t> res;
@@ -50,6 +50,7 @@ std::unordered_set<size_t> ExplicitTreeAutCore::GetUsedStates() const
 
 	return res;
 }
+*/
 
 BaseTransIterator::BaseTransIterator(
 	const ExplicitTreeAutCore&        aut) :
@@ -95,7 +96,7 @@ Iterator& Iterator::operator++()
 
 	return *this;
 }
-
+/*
 DownAccessor::DownAccessor(
 	const ExplicitTreeAutCore&     aut,
 	size_t                         state) :
@@ -149,8 +150,9 @@ DownAccessorIterator& DownAccessorIterator::operator++()
 	return *this;
 }
 
+
 AcceptTransIterator::AcceptTransIterator(
-	int                              /* FILL */,
+	int                               ,
 	const ExplicitTreeAutCore&       aut) :
 	BaseTransIterator(0, aut),
 	stateSetIterator_()
@@ -163,6 +165,7 @@ AcceptTransIterator::AcceptTransIterator(
 {
 	this->init();
 }
+*/
 
 void AcceptTransIterator::init()
 {
@@ -186,7 +189,7 @@ void AcceptTransIterator::init()
 	tupleIterator_ = symbolSetIterator_->second->begin();
 }
 
-
+/*
 AcceptTransIterator& AcceptTransIterator::operator++()
 {
 	if (++tupleIterator_ != symbolSetIterator_->second->end())
@@ -205,7 +208,7 @@ AcceptTransIterator& AcceptTransIterator::operator++()
 	this->init();
 	return *this;
 }
-
+*/
 
 ExplicitTreeAutCore::ExplicitTreeAutCore(
 	TupleCache&          tupleCache,
@@ -250,7 +253,7 @@ ExplicitTreeAutCore::ExplicitTreeAutCore(
 	alphabet_(std::move(aut.alphabet_))
 { }
 
-
+/*
 ExplicitTreeAutCore::ExplicitTreeAutCore(
 	const ExplicitTreeAutCore&    aut,
 	TupleCache&                   tupleCache) :
@@ -288,19 +291,22 @@ ExplicitTreeAutCore& ExplicitTreeAutCore::operator=(
 
 	return *this;
 }
+*/
 
-
+/*
 ExplicitTreeAutCore ExplicitTreeAutCore::Reduce(
 	const ReduceParam&            params) const
 {
-    /*
+
+
+    
 	typedef Util::TwoWayDict<
 		StateType,
 	 	StateType,
 	 	std::unordered_map<StateType, StateType>,
 	 	std::unordered_map<StateType, StateType>
 	 > StateMap;
-     */
+     
   
 	 using StateMap = std::unordered_map<StateType, StateType>;
   
@@ -351,8 +357,10 @@ ExplicitTreeAutCore ExplicitTreeAutCore::Reduce(
 
 	return aut;
 }
+*/
 
 
+/*
 std::string ExplicitTreeAutCore::ToString(const Transition& trans) const
 {
 	std::ostringstream os;
@@ -384,3 +392,5 @@ std::string ExplicitTreeAutCore::ToString(const Transition& trans) const
 
 	return os.str();
 }
+*/
+

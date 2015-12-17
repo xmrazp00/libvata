@@ -6,6 +6,7 @@
 #include <vata/explicit_tree_aut.hh>
 #include <vata/parsing/timbuk_parser.hh>
 #include <vata/serialization/timbuk_serializer.hh>
+#include <vata/util/two_way_trans_dict.hh>
 
 const char* autStr =
 	"Ops           a:0 b:2\n"
@@ -28,6 +29,51 @@ int main()
 
 	// create the dictionary for translating state names to internal state numbers
 	VATA::AutBase::StateDict stateDict;
+  
+//================================================== TEST TRANSDUCERS ===========================================
+
+    Automaton::SymbolType t1(0);              
+    Automaton::SymbolType t2(1);              
+    Automaton::SymbolType t3(2);              
+    Automaton::SymbolType t4(3);              
+    
+    using StringRank = Automaton::StringRank;
+    using SymDict = VATA::Util::TwoWayDict<StringRank, Automaton::SymbolType>;
+    SymDict symdict;
+    size_t symbol2 = 0;
+    VATA::Util::TranslatorWeak<SymDict> TransSymbolDict(symdict, [&](const StringRank) {return symbol2++;});
+    
+    StringRank SR("Ferko", 2); 
+
+    size_t num = TransSymbolDict(SR);
+    auto back = symdict.TranslateBwd(num);
+   
+    std::cout << "STRINGRANK bol prelozeny do : " << num << ", a jeho hodnoty su : " << back.symbolStr << " a " << back.rank <<
+    "\n";
+    
+    
+    using DoubleSymbolType = std::pair<Automaton::SymbolType, Automaton::SymbolType>; 
+    DoubleSymbolType DST = std::make_pair(t1, t2);
+    DoubleSymbolType DST2 = std::make_pair(t3, t4);
+    
+    using Dict = VATA::Util::TwoWayDict<DoubleSymbolType, Automaton::SymbolType>;
+    Dict dict;
+    size_t symbol = 0;
+
+    VATA::Util::TranslatorWeak<Dict> TransDict(dict, [&](const DoubleSymbolType&) {return symbol++;});
+
+    size_t s = TransDict(DST);
+    auto sym = dict.TranslateBwd(s);
+    
+    std::cout << "Prelozene do cisla je : " << s << " a je to dvojica : " << sym.first <<", " << sym.second << "\n";
+   
+    s = TransDict(DST2);
+    sym = dict.TranslateBwd(s);
+
+    std::cout << "Prelozene do cisla je : " << s << " a je to dvojica : " << sym.first <<", " << sym.second << "\n";
+
+
+//================================================== TEST TRANSDUCERS ===========================================
 
 	// create and load the automaton
 	Automaton aut;
