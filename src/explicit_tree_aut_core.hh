@@ -45,10 +45,10 @@ namespace VATA
 		using StateType        = ExplicitTreeAut::StateType;
 		using FinalStateSet    = ExplicitTreeAut::FinalStateSet;
 		using SymbolType       = ExplicitTreeAut::SymbolType;
-        //---------TRANSDUCER
+        //---------TRANSDUCER------------------------------------
         using DoubleSymbolType = ExplicitTreeAut::DoubleSymbolType;
         using TransDict        = ExplicitTreeAut::TransDict;
-        //---------TRANSDUCER
+        //---------TRANSDUCER------------------------------------
 		using TuplePtr         = std::shared_ptr<ExplicitTreeAut::StateTuple>;
 		using TuplePtrSet      = std::set<TuplePtr>;
 		using TuplePtrSetPtr   = std::shared_ptr<TuplePtrSet>;
@@ -142,7 +142,8 @@ protected:  // data members
 
 	const ExplicitTreeAutCore& aut_;
 
-	StateToTransitionClusterMap::const_iterator stateClusterIterator_;
+	
+    StateToTransitionClusterMap::const_iterator stateClusterIterator_;
 	TransitionCluster::const_iterator symbolSetIterator_;
 	TuplePtrSet::const_iterator tupleIterator_;
 
@@ -379,6 +380,7 @@ GCC_DIAG_ON(effc++)
 public:   // data types
 
 	using SymbolType       = ExplicitTreeAut::SymbolType;
+    using Symbol           = VATA::Util::AutDescription::Symbol;           //TRANSDUCER
     using DoubleSymbolType = ExplicitTreeAut::DoubleSymbolType;         //TRANSDUCERS
 	using StringSymbolType = ExplicitTreeAut::StringSymbolType;
 	using TuplePtr         = ExplicitTreeAutCoreUtil::TuplePtr;
@@ -434,6 +436,8 @@ private:  // data members
 	FinalStateSet finalStates_;
 
 	StateToTransitionClusterMapPtr transitions_;
+
+    TransDict transDict;
 
 	/**
 	 * @brief  The alphabet of the automaton
@@ -701,6 +705,26 @@ public:   // methods
 
 protected:// methods
 
+    template <
+        class SymbolTranslFunc>
+    std::pair<SymbolType, SymbolType> parseSymbol(
+        SymbolTranslFunc& symbolTransl,
+        Symbol& symbol)
+    {
+        size_t position; 
+        std::string delimiter = "/";
+
+        std::string trans = symbol.first;
+        position = trans.find(delimiter);            //Najde poziciu oddelovaca - "/"
+        std::string strSymbol1 = trans.substr(0, position);       //Od indexu 0 po rozdelovac je prvy symbol
+        trans.erase(0, position + delimiter.length());       //prvy symbol a oddelovac vymaze
+
+        size_t sym1 = symbolTransl(StringRank(strSymbol1, symbol.second));      //prelozi oba symboly a zapamata si ich
+        size_t sym2 = symbolTransl(StringRank(trans, symbol.second));      //oba symboly maju rovnaky rank
+
+        return std::make_pair(sym1, sym2);
+    }
+
 	template <
 		class StateTranslFunc,
 		class SymbolTranslFunc>
@@ -710,20 +734,17 @@ protected:// methods
 		SymbolTranslFunc&              symbolTransl,
 		const std::string&            /* params */ = "")
 	{
-/*
-		for (auto symbolRankPair : desc.symbols)
-		{
-		std::cout <<	symbolTransl(StringRank(symbolRankPair.first, symbolRankPair.second));
-		std::cout <<	symbolTransl(StringRank(symbolRankPair.first, symbolRankPair.second));
-		}
-*/
-    	for (auto symbolRankPair : desc.symbols)
-		{   
-            
-			symbolTransl(StringRank(symbolRankPair.first, symbolRankPair.second));
-            std::cout << "Meno symbolu je : " << symbolRankPair.first << ", a rank je : " << symbolRankPair.second << "\n";
-		}
 
+        std::string delimiter = "/";
+        size_t counter = 0;
+
+        DoubleSymbolToSymbolTranslWeak TransTransl(transDict, [&](const DoubleSymbolType&) {return counter++;});
+
+
+    	for (auto symbolRankPair : desc.symbols)
+		{      
+            TransTransl(parseSymbol(symbolTransl, symbolRankPair));                            //Prelozi dvojicu symbolov 
+		}
 
 		for (const AutDescription::State& s : desc.finalStates)
 		{
@@ -744,9 +765,10 @@ protected:// methods
 				children.push_back(stateTransl(c));
 			}
 
+            Symbol symbol = std::make_pair(symbolStr, children.size());                 //obsahuje povodny symbol v  tvare "a/b" a rank ako cislo...
 			this->AddTransition(
 				children,
-				symbolTransl(StringRank(symbolStr, children.size())),
+				TransTransl(parseSymbol(symbolTransl, symbol)),
 				stateTransl(parentStr));
 		}
 	}

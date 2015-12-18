@@ -216,9 +216,22 @@ ExplicitTreeAutCore::ExplicitTreeAutCore(
 	cache_(tupleCache),
 	finalStates_(),
 	transitions_(StateToTransitionClusterMapPtr(new StateToTransitionClusterMap())),
+    transDict(),
 	alphabet_(alphabet)
 { }
 
+
+
+/*
+ExplicitTreeAutCore::ExplicitTreeAutCore(
+	TupleCache&          tupleCache,
+	AlphabetType&        alphabet) :
+	cache_(tupleCache),
+	finalStates_(),
+	transitions_(StateToTransitionClusterMapPtr(new StateToTransitionClusterMap())),
+	alphabet_(alphabet)
+{ }
+*/
 
 ExplicitTreeAutCore::ExplicitTreeAutCore(
 	const ExplicitTreeAutCore&    aut,
@@ -227,6 +240,7 @@ ExplicitTreeAutCore::ExplicitTreeAutCore(
 	cache_(aut.cache_),
 	finalStates_(),
 	transitions_(),
+    transDict(),
 	alphabet_(aut.alphabet_)
 {
 	if (copyTrans)
@@ -250,6 +264,7 @@ ExplicitTreeAutCore::ExplicitTreeAutCore(
 	cache_(aut.cache_),
 	finalStates_(std::move(aut.finalStates_)),
 	transitions_(std::move(aut.transitions_)),
+    transDict(),
 	alphabet_(std::move(aut.alphabet_))
 { }
 
