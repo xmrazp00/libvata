@@ -8,13 +8,13 @@
 #include <vata/serialization/timbuk_serializer.hh>
 
 const char* autStr =
-	"Ops           a:0 b:2\n"
+	"Ops           a/c:0 b/d:2\n"
 	"Automaton     aut\n"
 	"States        q0 q1\n"
 	"Final States  q1\n"
 	"Transitions\n"
-	"a          -> q0\n"
-	"b(q0, q0)  -> q1\n";
+	"a/c          -> q0\n"
+	"b/d(q0, q0)  -> q1\n";
 
 typedef VATA::ExplicitTreeAut Automaton;
 //typedef VATA::BDDBottomUpTreeAut Automaton;  // uncomment for BDD BU automaton

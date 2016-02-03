@@ -45,6 +45,10 @@ namespace VATA
 		using StateType        = ExplicitTreeAut::StateType;
 		using FinalStateSet    = ExplicitTreeAut::FinalStateSet;
 		using SymbolType       = ExplicitTreeAut::SymbolType;
+        //---------TRANSDUCER------------------------------------
+        using DoubleSymbolType = ExplicitTreeAut::DoubleSymbolType;
+        using TransDict        = ExplicitTreeAut::TransDict;
+        //---------TRANSDUCER------------------------------------
 		using TuplePtr         = std::shared_ptr<ExplicitTreeAut::StateTuple>;
 		using TuplePtrSet      = std::set<TuplePtr>;
 		using TuplePtrSetPtr   = std::shared_ptr<TuplePtrSet>;
@@ -81,6 +85,7 @@ namespace VATA
 
 				return tupleSet;
 			}
+            
 		};
 
 		using TransitionClusterPtr    = std::shared_ptr<TransitionCluster>;
@@ -113,8 +118,8 @@ namespace VATA
 			}
 		};
 
-		class AcceptTrans;
-		class DownAccessor;
+//		class AcceptTrans;
+//		class DownAccessor;
 	}
 }
 
@@ -137,7 +142,8 @@ protected:  // data members
 
 	const ExplicitTreeAutCore& aut_;
 
-	StateToTransitionClusterMap::const_iterator stateClusterIterator_;
+	
+    StateToTransitionClusterMap::const_iterator stateClusterIterator_;
 	TransitionCluster::const_iterator symbolSetIterator_;
 	TuplePtrSet::const_iterator tupleIterator_;
 
@@ -154,7 +160,7 @@ protected:// methods
 
 	BaseTransIterator(
 		const ExplicitTreeAutCore&   aut);
-
+/*
 	BaseTransIterator(
 		const BaseTransIterator&           baseTransIter) :
 		aut_(baseTransIter.aut_),
@@ -162,7 +168,7 @@ protected:// methods
 		symbolSetIterator_(baseTransIter.symbolSetIterator_),
 		tupleIterator_(baseTransIter.tupleIterator_)
 	{ }
-
+*/
 	Transition getTrans() const
 	{
 		assert(*tupleIterator_);
@@ -212,13 +218,14 @@ public:   // methods
 		const ExplicitTreeAutCore&   aut) :
 		BaseTransIterator(aut)
 	{ }
-
+/*
 	Iterator(const Iterator& iter) :
 		BaseTransIterator(iter)
 	{ }
 
-
+*/
 	Iterator& operator++();
+
 };
 
 
@@ -236,15 +243,15 @@ private:  // methods
 	void init();
 
 public:   // methods
-
+/*
 	AcceptTransIterator(
-		int                              /* FILL */,
+		int                             ,
 		const ExplicitTreeAutCore&       aut);
 
 	explicit AcceptTransIterator(
 		const ExplicitTreeAutCore&       aut);
-
-	AcceptTransIterator& operator++();
+*/
+//	AcceptTransIterator& operator++();
 };
 
 class VATA::ExplicitTreeAutCoreUtil::DownAccessorIterator
@@ -258,7 +265,7 @@ private:  // data members
 
 private:  // methods
 
-	Transition getTrans() const;
+//	Transition getTrans() const;
 
 public:   // methods
 
@@ -269,7 +276,7 @@ public:   // methods
 		symbolSetIterator_(),
 		tupleIterator_()
 	{ }
-
+/*
 	explicit DownAccessorIterator(
 		const DownAccessor&           accessor);
 
@@ -291,26 +298,27 @@ public:   // methods
 
 		return this->getTrans();
 	}
+*/
 };
 
 class VATA::ExplicitTreeAutCoreUtil::DownAccessor
 {
 private:  // data types
 
-	friend class DownAccessorIterator;
+//	friend class DownAccessorIterator;
 
 public:   // data types
 
-	using iterator        = DownAccessorIterator;
-	using const_iterator  = DownAccessorIterator;
+//	using iterator        = DownAccessorIterator;
+//	using const_iterator  = DownAccessorIterator;
 
 private:  // data members
 
-	size_t state_;
-	const TransitionCluster* cluster_;
+//	size_t state_;
+//	const TransitionCluster* cluster_;
 
 public:   // methods
-
+/*
 	DownAccessor(
 		const ExplicitTreeAutCore&     aut,
 		size_t                         state);
@@ -329,6 +337,7 @@ public:   // methods
 	{
 		return nullptr == cluster_;
 	}
+*/
 };
 
 
@@ -347,8 +356,8 @@ public:   // methods
 	using iterator        = AcceptTransIterator;
 	using const_iterator  = AcceptTransIterator;
 
-	AcceptTransIterator begin() const { return AcceptTransIterator(aut_); }
-	AcceptTransIterator end() const { return AcceptTransIterator(0, aut_); }
+//	AcceptTransIterator begin() const { return AcceptTransIterator(aut_); }
+//	AcceptTransIterator end() const { return AcceptTransIterator(0, aut_); }
 };
 
 
@@ -371,6 +380,8 @@ GCC_DIAG_ON(effc++)
 public:   // data types
 
 	using SymbolType       = ExplicitTreeAut::SymbolType;
+    using Symbol           = VATA::Util::AutDescription::Symbol;           //TRANSDUCER
+    using DoubleSymbolType = ExplicitTreeAut::DoubleSymbolType;         //TRANSDUCERS
 	using StringSymbolType = ExplicitTreeAut::StringSymbolType;
 	using TuplePtr         = ExplicitTreeAutCoreUtil::TuplePtr;
 	using FinalStateSet    = ExplicitTreeAutCoreUtil::FinalStateSet;
@@ -399,8 +410,10 @@ private:  // data types
 	using TupleCache       = Util::Cache<StateTuple>;
 
 	using SymbolDict                      = ExplicitTreeAut::SymbolDict;
+    using TransDict                       = ExplicitTreeAut::TransDict;                    //TRANSDUCER
 	using StringSymbolToSymbolTranslStrict= ExplicitTreeAut::StringSymbolToSymbolTranslStrict;
 	using StringSymbolToSymbolTranslWeak  = ExplicitTreeAut::StringSymbolToSymbolTranslWeak;
+    using DoubleSymbolToSymbolTranslWeak  = ExplicitTreeAut::DoubleSymbolToSymbolTranslWeak;    //TRANSDUCER
 	using SymbolBackTranslStrict          = ExplicitTreeAut::SymbolBackTranslStrict;
 
 
@@ -423,6 +436,8 @@ private:  // data members
 	FinalStateSet finalStates_;
 
 	StateToTransitionClusterMapPtr transitions_;
+
+    TransDict transDict;
 
 	/**
 	 * @brief  The alphabet of the automaton
@@ -515,19 +530,19 @@ public:   // methods
 	ExplicitTreeAutCore(
 		ExplicitTreeAutCore&&         aut);
 
-
+/*
 	ExplicitTreeAutCore(
 		const ExplicitTreeAutCore&    aut,
 		TupleCache&                   tupleCache);
+*/
 
-
-	ExplicitTreeAutCore& operator=(
+	ExplicitTreeAutCore& operator=(                                 //explicit_tree_incl.cc
 		const ExplicitTreeAutCore&    rhs);
 
-
+/*
 	ExplicitTreeAutCore& operator=(
 		ExplicitTreeAutCore&&         rhs);
-
+*/
 
 	~ExplicitTreeAutCore()
 	{ }
@@ -542,30 +557,31 @@ public:   // methods
 	{
 		finalStates_.insert(state);
 	}
-
+/*
 	void SetStatesFinal(
         const std::set<StateType>&    states)
 	{
 		finalStates_.insert(states.begin(), states.end());
 	}
-
-	bool IsStateFinal(
+*/
+	bool IsStateFinal(                                                      //explicit_tree_sim.cc
 		const StateType&          state) const
 	{
 		return finalStates_.count(state) > 0;
 	}
-
+/*
 	void EraseFinalStates()
 	{
 		finalStates_.clear();
 	}
-
+*/
+/*
 	AcceptTrans GetAcceptTrans() const
 	{
-		return AcceptTrans(*this);
+		return AcceptTrans(*this);bstractAlphabet::BwdTranslatorPtr
 	}
-
-	const StateToTransitionClusterMapPtr& GetTransitions() const
+*/
+	const StateToTransitionClusterMapPtr& GetTransitions() const            //explicit_tree_isect_bu.cc
 	{
 		return transitions_;
 	}
@@ -575,9 +591,12 @@ public:   // methods
     *
     * @return A vector with all used states
     */
-	std::unordered_set<size_t> GetUsedStates() const;
 
 
+//	std::unordered_set<size_t> GetUsedStates() const;
+
+
+/*
 	void Clear()
 	{
 		assert(nullptr != transitions_);
@@ -594,7 +613,8 @@ public:   // methods
 
 		this->EraseFinalStates();
 	}
-
+*/    
+/*
 	DownAccessor GetDown(
 		const StateType&           state) const
 	{
@@ -606,7 +626,7 @@ public:   // methods
 	{
 		return this->GetDown(state);
 	}
-
+*/
 	const_iterator begin() const
 	{
 		return const_iterator(*this);
@@ -618,13 +638,13 @@ public:   // methods
 		return const_iterator(0, *this);
 	}
 
-
+/*
 	void AddTransition(const Transition& trans)
 	{
 		this->AddTransition(
 			trans.GetChildren(), trans.GetSymbol(), trans.GetParent());
 	}
-
+*/
 	void AddTransition(
 		const StateTuple&         children,
 		const SymbolType&         symbol,
@@ -633,7 +653,7 @@ public:   // methods
 		this->internalAddTransition(this->tupleLookup(children), symbol, parent);
 	}
 
-
+/*
 	bool ContainsTransition(
 		const StateTuple&         children,
 		const SymbolType&         symbol,
@@ -668,12 +688,13 @@ public:   // methods
 			trans.GetSymbol(),
 			trans.GetParent());
 	}
-
+    */
+/*
 	bool AreTransitionsEmpty()
 	{
 		return this->uniqueClusterMap()->empty();
 	}
-
+*/
 //	static void CopyTransitions(
 //		ExplicitTreeAutCore&           dst,
 //		const ExplicitTreeAutCore&     src)
@@ -684,6 +705,26 @@ public:   // methods
 
 protected:// methods
 
+    template <
+        class SymbolTranslFunc>
+    std::pair<SymbolType, SymbolType> parseSymbol(
+        SymbolTranslFunc&                symbolTransl,
+        Symbol&                          symbol)
+    {
+        size_t position; 
+        std::string delimiter = "/";
+
+        std::string trans = symbol.first;
+        position = trans.find(delimiter);            //Najde poziciu oddelovaca - "/"
+        std::string strSymbol1 = trans.substr(0, position);       //Od indexu 0 po rozdelovac je prvy symbol
+        trans.erase(0, position + delimiter.length());       //prvy symbol a oddelovac vymaze
+
+        size_t sym1 = symbolTransl(StringRank(strSymbol1, symbol.second));      //prelozi oba symboly a zapamata si ich
+        size_t sym2 = symbolTransl(StringRank(trans, symbol.second));      //oba symboly maju rovnaky rank
+
+        return std::make_pair(sym1, sym2);
+    }
+
 	template <
 		class StateTranslFunc,
 		class SymbolTranslFunc>
@@ -691,12 +732,25 @@ protected:// methods
 		const AutDescription&          desc,
 		StateTranslFunc&               stateTransl,
 		SymbolTranslFunc&              symbolTransl,
-		const std::string&             /* params */ = "")
+		const std::string&            /* params */ = "")
 	{
-		for (auto symbolRankPair : desc.symbols)
-		{
-			symbolTransl(StringRank(symbolRankPair.first, symbolRankPair.second));
+
+        std::string delimiter = "/";
+        size_t counter = 0;
+
+        DoubleSymbolToSymbolTranslWeak TransTransl(transDict, [&](const DoubleSymbolType&) {return counter++;});
+
+
+    	for (auto symbolRankPair : desc.symbols)
+		{         
+            TransTransl(parseSymbol(symbolTransl, symbolRankPair));                            //Prelozi dvojicu symbolov 
 		}
+/*
+            auto s = transDict.TranslateBwd(0);
+            auto a = this->GetAlphabet()->GetSymbolBackTransl()->operator()(s.first); 
+            auto b = this->GetAlphabet()->GetSymbolBackTransl()->operator()(s.second);
+            std::cout << "\n--- SPATNY VYPIS ZNAKOV--- \n";
+            std::cout << a << " a " << b <<"\n";*/
 
 		for (const AutDescription::State& s : desc.finalStates)
 		{
@@ -717,12 +771,36 @@ protected:// methods
 				children.push_back(stateTransl(c));
 			}
 
+            Symbol symbol = std::make_pair(symbolStr, children.size()); //obsahuje povodny symbol v  tvare "a/b" a rank ako cislo
 			this->AddTransition(
 				children,
-				symbolTransl(StringRank(symbolStr, children.size())),
+				TransTransl(parseSymbol(symbolTransl, symbol)),
 				stateTransl(parentStr));
 		}
 	}
+
+
+    template <
+        class BackSymbolTranslFunc>
+    StringRank mergeSymbol(
+        const BackSymbolTranslFunc&               symbolTransl,
+        const SymbolType                          doubleSymbol) const
+    {
+        std::string mergedSymbol;                                       //tu bude uz spojeny symbol
+        std::pair<SymbolType, SymbolType> transSymbol = transDict.TranslateBwd(doubleSymbol); //rozdeli na dva symboli
+        
+        StringRank sym1 = (*symbolTransl)(transSymbol.first);
+        StringRank sym2 = (*symbolTransl)(transSymbol.second);
+
+        mergedSymbol = sym1.symbolStr;
+        mergedSymbol += "/";
+        mergedSymbol += sym2.symbolStr;
+
+        assert(sym1.rank == sym2.rank);                     //overi, ci sa rovnaju ranky. Treba ?
+
+        return StringRank(mergedSymbol, sym1.rank);
+
+    }
 
 
 	template <
@@ -738,7 +816,7 @@ protected:// methods
 			alphabet->GetSymbolBackTransl();
 		assert(nullptr != symbolTransl);
 
-		AutDescription desc;
+        AutDescription desc;
 
 		for (const StateType& s : finalStates_)
 		{
@@ -756,9 +834,8 @@ protected:// methods
 
 			AutDescription::Transition trans(
 				tupleStr,
-				(*symbolTransl)(t.GetSymbol()).symbolStr,
+				mergeSymbol(symbolTransl, t.GetSymbol()).symbolStr,
 				stateTransl(t.GetParent()));
-
 			desc.transitions.insert(trans);
 		}
 
@@ -770,7 +847,7 @@ public:   // methods
 
 
 	template <class Index>
-	void BuildStateIndex(
+	void BuildStateIndex(                                                           ///explicit_tree_comp_down.cc
 		Index&                     index) const
 	{
 		for (const StateType& state : finalStates_)
@@ -848,7 +925,7 @@ public:   // methods
 
 
 	template <class Index>
-	ExplicitTreeAutCore ReindexStates(
+	ExplicitTreeAutCore ReindexStates(                                                  //explicit_tree_incl.cc /incl_param.hh
 		Index&                    index,
 		bool                      addFinalStates = true) const
 	{
@@ -858,14 +935,14 @@ public:   // methods
 		return res;
 	}
 
-
+/*
 	ExplicitTreeAutCore ReindexStates(
 		StateToStateTranslWeak&     stateTransl) const
 	{
 		return this->ReindexStates<StateToStateTranslWeak>(stateTransl);
 	}
-
-
+*/
+/*
 	template <class CopyFctor>
 	void CopyTransitionsFrom(
 		const ExplicitTreeAutCore&    src,
@@ -879,9 +956,9 @@ public:   // methods
 			}
 		}
 	}
-
+*/
 	template <class OperationFunc>
-	static void ForeachDownSymbolFromStateAndStateSetDo(
+	static void ForeachDownSymbolFromStateAndStateSetDo(                                    //explicit_tree_incl_down.cc
 		const ExplicitTreeAutCore&   lhs,
 		const ExplicitTreeAutCore&   rhs,
 		const StateType&             lhsState,
@@ -941,7 +1018,7 @@ public:   // methods
 		}
 	}
 
-	AlphabetType& GetAlphabet() const
+	AlphabetType& GetAlphabet() const                                                   //explicit_tree_comp_down.hh
 	{
 		// Assertions
 		assert(nullptr != alphabet_);
@@ -949,6 +1026,7 @@ public:   // methods
 		return alphabet_;
 	}
 
+/*
 	void SetAlphabet(AlphabetType& alphabet)
 	{
 		// Assertions
@@ -956,8 +1034,8 @@ public:   // methods
 
 		alphabet_ = alphabet;
 	}
-
-	static DownInclStateTupleVector StateTupleSetToVector(
+*/
+	static DownInclStateTupleVector StateTupleSetToVector(                              //explicit_tree_incl.cc
 		const DownInclStateTupleSet& tupleSet)
 	{
 		return DownInclStateTupleVector(tupleSet.begin(), tupleSet.end());
@@ -965,7 +1043,7 @@ public:   // methods
 
 
 	template <class Index = Util::IdentityTranslator<StateType>>
-	ExplicitLTS TranslateDownward(
+	ExplicitLTS TranslateDownward(                                                         //explicit_tree_sim.cc
 		size_t        numStates,
 		Index&        stateIndex = Index()) const;
 
@@ -974,7 +1052,7 @@ public:   // methods
 		class Rel,
 		class Index = Util::IdentityTranslator<StateType>
 	>
-	ExplicitLTS TranslateUpward(
+	ExplicitLTS TranslateUpward(                                                            //explicit_tree_transl.hh / sim.cc
 		std::vector<std::vector<size_t>>&     partition,
 		Util::BinaryRelation&                 relation,
 		const Rel&                            param,
@@ -1013,24 +1091,26 @@ public:   // methods
 	 *
 	 * @returns  The automaton with collapsed states
 	 */
-	template <
+/*
+    template <
 		class MapType>
 	ExplicitTreeAutCore CollapseStates(
 		MapType&      stateMap) const
 	{
 		return this->ReindexStates(stateMap);
 	}
-
+*/
 	//
 	// simulation computation
 	//
-	StateDiscontBinaryRelation ComputeSimulation(
+
+	StateDiscontBinaryRelation ComputeSimulation(                                           //explicit_tree_sim.cc
 		const VATA::SimParam&          params) const;
 
-	StateDiscontBinaryRelation ComputeDownwardSimulation(
+	StateDiscontBinaryRelation ComputeDownwardSimulation(                                   //explicit_tree_sim.cc
 		const VATA::SimParam&          params) const;
 
-	StateDiscontBinaryRelation ComputeDownwardSimulation(
+	StateDiscontBinaryRelation ComputeDownwardSimulation(                                   //explicit_tree_sim.cc
 		size_t                         size) const;
 
 	// template <class Index>
@@ -1039,10 +1119,10 @@ public:   // methods
 	// 	const Index&      index) const;
 
 
-	StateDiscontBinaryRelation ComputeUpwardSimulation(
+	StateDiscontBinaryRelation ComputeUpwardSimulation(                                     //explicit_tree_sim.cc
 		const VATA::SimParam&          params) const;
 
-	StateDiscontBinaryRelation ComputeUpwardSimulation(
+	StateDiscontBinaryRelation ComputeUpwardSimulation(                                     //explicit_tree_sim.cc
 		size_t                         size) const;
 
 	// template <class Index>
@@ -1058,31 +1138,40 @@ public:   // methods
 		AutBase::StateToStateMap*             pTranslMapRhs = nullptr);
 
 
+
+
+
+
+
 	static ExplicitTreeAutCore UnionDisjointStates(
 		const ExplicitTreeAutCore&           lhs,
 		const ExplicitTreeAutCore&           rhs);
 
 
-	static ExplicitTreeAutCore Intersection(
+
+
+
+
+	static ExplicitTreeAutCore Intersection(                                                //explicit_tree_isect.cc
 		const ExplicitTreeAutCore&           lhs,
 		const ExplicitTreeAutCore&           rhs,
 		VATA::AutBase::ProductTranslMap*     pTranslMap = nullptr);
 
 
-	static ExplicitTreeAutCore IntersectionBU(
+	static ExplicitTreeAutCore IntersectionBU(                                              //explicit_tree_isect_bu.cc
 		const ExplicitTreeAutCore&           lhs,
 		const ExplicitTreeAutCore&           rhs,
 		VATA::AutBase::ProductTranslMap*     pTranslMap = nullptr);
 
 
-	ExplicitTreeAutCore GetCandidateTree() const;
+	ExplicitTreeAutCore GetCandidateTree() const;                                           //explicit_tree_candidate.cc
 
 
-	ExplicitTreeAutCore RemoveUnreachableStates(
+	ExplicitTreeAutCore RemoveUnreachableStates(                                            //explicit_tree_candidate.cc
 		AutBase::StateToStateMap*            pTranslMap = nullptr) const;
 
 
-	ExplicitTreeAutCore RemoveUselessStates(
+	ExplicitTreeAutCore RemoveUselessStates(                                                //explicit_tree_comp_down.cc
 		StateToStateMap*                    pTranslMap = nullptr) const;
 
 
@@ -1090,12 +1179,13 @@ public:   // methods
 		class Rel,
 		class Index
 	>
-	ExplicitTreeAutCore RemoveUnreachableStates(
+	ExplicitTreeAutCore RemoveUnreachableStates(                                            //explicit_tree_unreach.hh
 		const Rel&                          rel,
 		const Index&                        index) const;
 
 
-	static bool CheckInclusion(
+/*
+	static bool CheckInclusion(                                                               //explicit_tree_incl.cc 
 		const ExplicitTreeAutCore&          smaller,
 		const ExplicitTreeAutCore&          bigger)
 	{
@@ -1105,8 +1195,8 @@ public:   // methods
 		return ExplicitTreeAutCore::CheckInclusion(smaller, bigger, inclParam);
 	}
 
-
-	static bool CheckInclusion(
+*/
+	static bool CheckInclusion(                                                                 //explicit_tree_incl.cc
 		const ExplicitTreeAutCore&          smaller,
 		const ExplicitTreeAutCore&          bigger,
 		const VATA::InclParam&              params);
@@ -1114,13 +1204,13 @@ public:   // methods
 
 	template <
 		class Rel>
-	ExplicitTreeAutCore ComplementWithPreorder(
+	ExplicitTreeAutCore ComplementWithPreorder(                                                   //explicit_tree_comp_down.cc
 		const Rel&                          preorder) const;
 
 
 	ExplicitTreeAutCore Complement() const;
 
-
+/*
 	bool IsLangEmpty() const
 	{
 		ExplicitTreeAutCore autTmp = this->RemoveUselessStates();
@@ -1141,7 +1231,7 @@ public:   // methods
 
 	ExplicitTreeAutCore Reduce(
 		const ReduceParam&            params) const;
-
+*/
 
 	template <
 		class SymbolTranslateF>
@@ -1160,9 +1250,10 @@ public:   // methods
 
 		return aut;
 	}
-
+/*
 	std::string ToString(
 		const Transition&                   trans) const;
+*/
 };
 
 #endif

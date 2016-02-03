@@ -50,6 +50,7 @@ namespace VATA
 }
 
 
+
 /**
  * @brief  Base class for automata
  *
@@ -64,6 +65,7 @@ public:   // data types
 	using StateType      = size_t;
 	using StateHT        = std::unordered_set<StateType>;
 	using FinalStateSet  = std::unordered_set<StateType>;
+
 
 	using AutDescription             = VATA::Util::AutDescription;
 	using StateDict                  = Util::TwoWayDict<std::string, StateType>;

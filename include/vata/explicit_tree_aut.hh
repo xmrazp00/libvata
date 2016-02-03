@@ -102,8 +102,13 @@ public:   // public data types
 
 	using StringSymbolType   = StringRank;
 	using Transition         = TreeAutBase::TTransition<SymbolType>;
+    //------TRANSDUCER
+    using DoubleSymbolType   = std::pair<SymbolType, SymbolType>;    
+    using TransDict          = VATA::Util::TwoWayDict<DoubleSymbolType, SymbolType>;
+	using DoubleSymbolToSymbolTranslWeak  = Util::TranslatorWeak<TransDict>;
+    //------TRANSDUCER
 
-	using SymbolDict                      =
+    using SymbolDict                      =
 		VATA::Util::TwoWayDict<StringSymbolType, SymbolType>;
 	using StringSymbolToSymbolTranslWeak  = Util::TranslatorWeak<SymbolDict>;
 	using StringSymbolToSymbolTranslStrict= Util::TranslatorStrict<SymbolDict>;
