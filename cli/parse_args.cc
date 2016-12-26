@@ -392,6 +392,13 @@ Arguments parseArguments(int argc, char* argv[])
 
 					parserState = PARSING_LOAD_2_FILES_1;
 				}
+				else if (currentArg == "apply")
+				{
+					args.command   = COMMAND_TR_APPLY;
+					args.operands  = 2;
+
+					parserState = PARSING_LOAD_2_FILES_1;
+				}
 				else
 				{
 					throw std::runtime_error("Unknown command: " + currentArg);

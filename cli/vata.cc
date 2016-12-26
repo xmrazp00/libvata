@@ -20,6 +20,8 @@
 #include <vata/util/transl_strict.hh>
 #include <vata/util/two_way_dict.hh>
 #include <vata/util/util.hh>
+#include <vata/explicit_tree_trans.hh>
+#include "../src/explicit_tree_trans_core.hh"
 
 // standard library headers
 #include <cstdlib>
@@ -28,6 +30,7 @@
 // local headers
 #include "parse_args.hh"
 #include "operations.hh"
+
 
 
 using VATA::AutBase;
@@ -142,6 +145,55 @@ void printVersion()
 	std::cout << "\n";
 }
 
+int performOperationApply(const Arguments&        args,
+                          AbstrParser&            parser,
+                          AbstrSerializer&        serializer)
+{
+    ExplicitTreeAut         autInput1;
+    VATA::ExplicitTreeTrans transInput2;
+    ExplicitTreeAut         autResult;
+
+    StateDict stateDict1;
+    StateDict stateDict2;
+    StateDict stateDictRes;
+
+    autInput1.LoadFromString(
+            parser,
+            VATA::Util::ReadFile(args.fileName1),
+            stateDict1);
+
+    std::cout << autInput1.DumpToString(serializer, stateDict1) << std::endl;
+
+    //need to set alphabet in order to share symbols between aut and trans classes
+    transInput2.SetAlphabet(autInput1.GetAlphabet());
+
+    transInput2.LoadFromString(
+            parser,
+            VATA::Util::ReadFile(args.fileName2),
+            stateDict2);
+
+    std::cout << transInput2.DumpToString(serializer, stateDict2) << std::endl;
+
+    clock_gettime(CLOCK_THREAD_CPUTIME_ID, &startTime);     // set the timer
+
+    timespec finishTime;
+
+    autResult = transInput2.Apply(autInput1, false, &stateDictRes,&stateDict2, &stateDict1);
+
+    double opTime = (finishTime.tv_sec - startTime.tv_sec)
+                    + 1e-9 * (finishTime.tv_nsec - startTime.tv_nsec);
+
+    if (args.showTime)
+    {
+        std::cerr << opTime << "\n";
+    }
+
+    std::cout << autResult.DumpToString(serializer, stateDictRes);
+
+    return EXIT_SUCCESS;
+}
+
+
 template <class Aut>
 int performOperation(
 	const Arguments&        args,
@@ -150,6 +202,7 @@ int performOperation(
 {
 	Aut autInput1;
 	Aut autInput2;
+	VATA::ExplicitTreeTrans transInput2;        //ARTMC
 	Aut autResult;
 	bool boolResult = false;
 	VATA::AutBase::StateDiscontBinaryRelation relResult;
@@ -167,7 +220,14 @@ int performOperation(
 			stateDict1);
 	}
 
-	if (args.operands >= 2)
+	if (args.operands >= 2 && args.command == COMMAND_TR_APPLY)
+	{
+		transInput2.LoadFromString(
+				parser,
+				VATA::Util::ReadFile(args.fileName2),
+				stateDict2);
+	}
+	else if (args.operands >= 2)
 	{
 		autInput2.LoadFromString(
 			parser,
@@ -216,6 +276,8 @@ int performOperation(
 	timespec finishTime;
 
 	// process command
+
+
 	if (args.command == COMMAND_LOAD)
 	{
 		autResult = autInput1;
@@ -378,7 +440,15 @@ int executeCommand(const Arguments& args)
 		throw std::runtime_error("Internal error: invalid output format");
 	}
 
-	return performOperation<Aut>(args, *(parser.get()), *(serializer.get()));
+    if(args.command == COMMAND_TR_APPLY)
+    {
+        return performOperationApply(args, *(parser.get()), *(serializer.get()));
+    }
+    else
+    {
+        return performOperation<Aut>(args, *(parser.get()), *(serializer.get()));
+    }
+
 }
 
 
