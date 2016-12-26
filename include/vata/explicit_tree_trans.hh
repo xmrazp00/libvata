@@ -8,8 +8,8 @@
  *
  *****************************************************************************/
 
-#ifndef _VATA_EXPLICIT_TREE_AUT_HH_
-#define _VATA_EXPLICIT_TREE_AUT_HH_
+#ifndef _VATA_EXPLICIT_TREE_TRANS_HH_
+#define _VATA_EXPLICIT_TREE_TRANS_HH_
 
 // VATA headers
 #include <vata/vata.hh>
@@ -25,6 +25,8 @@
 #include <vata/util/transl_weak.hh>
 #include <vata/util/util.hh>
 
+#include <vata/explicit_tree_aut.hh>
+
 // Standard library headers
 #include <cstdint>
 #include <memory>
@@ -32,18 +34,17 @@
 #include <unordered_map>
 #include <vector>
 
-
 namespace VATA
 {
-	class ExplicitTreeAut;
+	class ExplicitTreeTrans;
 
 	template <
 		class>
 	class LoadableAut;
 
-	class ExplicitTreeAutCore;
+	class ExplicitTreeTransCore;
 
-    namespace ExplicitTreeAutCoreUtil
+    namespace ExplicitTreeTransCoreUtil
 	{
 		class Iterator;
 		class AcceptTrans;
@@ -63,23 +64,23 @@ namespace VATA
 		class DownAccessorIterator;
 	}
 */
-	class AbstractReindexF
+	class TAbstractReindexF
 	{
 	public:
 		virtual VATA::AutBase::StateType operator[](const VATA::AutBase::StateType&) = 0;
 		virtual VATA::AutBase::StateType at(const VATA::AutBase::StateType&) const = 0;
 
-		virtual ~AbstractReindexF()
+		virtual ~TAbstractReindexF()
 		{ }
 	};
 }
 
 
-class VATA::ExplicitTreeAut : public TreeAutBase
+class VATA::ExplicitTreeTrans : public TreeAutBase
 {
 private:  // data types
 
-	using CoreAut        = VATA::LoadableAut<ExplicitTreeAutCore>;
+	using CoreTrans        = VATA::LoadableAut<ExplicitTreeTransCore>;
 	using StateMap       = std::unordered_map<StateType, StateType>;
 
 public:   // public data types
@@ -115,9 +116,9 @@ public:   // public data types
 	using Transition         = TreeAutBase::TTransition<SymbolType>;
 
     //------TRANSDUCER
-//    using DoubleSymbolType   = std::pair<SymbolType, SymbolType>;   
-//    using TransDict          = VATA::Util::TwoWayDict<DoubleSymbolType, SymbolType>;
-//	using DoubleSymbolToSymbolTranslWeak  = Util::TranslatorWeak<TransDict>;
+    using DoubleSymbolType   = std::pair<SymbolType, SymbolType>;   
+    using TransDict          = VATA::Util::TwoWayDict<DoubleSymbolType, SymbolType>;
+	using DoubleSymbolToSymbolTranslWeak  = Util::TranslatorWeak<TransDict>;
     //------TRANSDUCER
 
 	using SymbolDict                      =
@@ -248,13 +249,14 @@ public:   // public data types
 		{ }
 	};
 
-	using AlphabetType = std::shared_ptr<AbstractAlphabet>;
+	//using AlphabetType = std::shared_ptr<AbstractAlphabet>;
+    using AlphabetType = std::shared_ptr<ExplicitTreeAut::AbstractAlphabet>;
 
 	class Iterator
 	{
 	private:  // data types
 
-		using CoreIterator  = ExplicitTreeAutCoreUtil::Iterator;
+		using CoreIterator  = ExplicitTreeTransCoreUtil::Iterator;
 
 	private:  // data members
 
@@ -286,7 +288,7 @@ public:   // public data types
 		{
 		private:  // data types
 
-			using CoreIterator = ExplicitTreeAutCoreUtil::AcceptTransIterator;
+			using CoreIterator = ExplicitTreeTransCoreUtil::AcceptTransIterator;
 
 		private:  // data types
 
@@ -294,7 +296,7 @@ public:   // public data types
 
 		public:   // methods
 
-			explicit Iterator(const ExplicitTreeAut& aut);
+			explicit Iterator(const ExplicitTreeTrans& aut);
 			explicit Iterator(const CoreIterator& coreIter);
 			Iterator(const Iterator& iter);
 			~Iterator();
@@ -312,7 +314,7 @@ public:   // public data types
 		using iterator         = Iterator;
 		using const_iterator   = Iterator;
 
-		using CoreAcceptTrans  = ExplicitTreeAutCoreUtil::AcceptTrans;
+		using CoreAcceptTrans  = ExplicitTreeTransCoreUtil::AcceptTrans;
 
 
 	private:  // data members
@@ -342,7 +344,7 @@ public:   // public data types
 		{
 		private:  // data types
 
-			using CoreIterator = ExplicitTreeAutCoreUtil::DownAccessorIterator;
+			using CoreIterator = ExplicitTreeTransCoreUtil::DownAccessorIterator;
 
 		private:  // data types
 
@@ -350,7 +352,7 @@ public:   // public data types
 
 		public:   // methods
 
-			explicit Iterator(const ExplicitTreeAut& aut);
+			explicit Iterator(const ExplicitTreeTrans& aut);
 			explicit Iterator(const CoreIterator& coreIter);
 			Iterator(const Iterator& iter);
 			~Iterator();
@@ -368,7 +370,7 @@ public:   // public data types
 		using iterator         = Iterator;
 		using const_iterator   = Iterator;
 
-		using CoreDownAccessor = ExplicitTreeAutCoreUtil::DownAccessor;
+		using CoreDownAccessor = ExplicitTreeTransCoreUtil::DownAccessor;
 
 	private:  // data members
 
@@ -393,30 +395,23 @@ public:   // public data types
 
 private:  // data members
 
-	std::unique_ptr<CoreAut> core_;
+	std::unique_ptr<CoreTrans> core_;
 
 public:   // methods
 
-    //--------------------------------------------------------
-
-    ExplicitTreeAutCore GetCore();
-	ExplicitTreeAutCore GetCore() const;
-
-    //--------------------------------------------------------
-
-	ExplicitTreeAut();
-	ExplicitTreeAut(
-            const ExplicitTreeAut& aut,
+	ExplicitTreeTrans();
+	ExplicitTreeTrans(
+            const ExplicitTreeTrans& aut,
 	        bool                   copyTrans = true,
 	        bool                   copyFinal = true);
-	ExplicitTreeAut(ExplicitTreeAut&& aut);
+	ExplicitTreeTrans(ExplicitTreeTrans&& aut);
 
-	ExplicitTreeAut& operator=(const ExplicitTreeAut& rhs);
-	ExplicitTreeAut& operator=(ExplicitTreeAut&& rhs);
+	ExplicitTreeTrans& operator=(const ExplicitTreeTrans& rhs);
+	ExplicitTreeTrans& operator=(ExplicitTreeTrans&& rhs);
 
-	~ExplicitTreeAut();
+	~ExplicitTreeTrans();
 
-	explicit ExplicitTreeAut(CoreAut&& core);
+	explicit ExplicitTreeTrans(CoreTrans&& core);
 
 
 	static StringSymbolType ToStringSymbolType(const std::string& str, size_t rank)
@@ -537,7 +532,7 @@ public:   // methods
 	 *
 	 * @returns  An automaton which is a reduced version of the current object
 	 */
-	ExplicitTreeAut Reduce() const;
+	ExplicitTreeTrans Reduce() const;
 
 
 	/**
@@ -551,7 +546,7 @@ public:   // methods
 	 * @returns  An automaton which is a reduced version of the current object
 	 *            w.r.t. the parameters
 	 */
-	ExplicitTreeAut Reduce(
+	ExplicitTreeTrans Reduce(
 		const VATA::ReduceParam&    params) const;
 
 
@@ -567,7 +562,7 @@ public:   // methods
 	 *
 	 * @returns  An automaton with states collapsed according to @p collapseMap
 	 */
-	ExplicitTreeAut CollapseStates(
+	ExplicitTreeTrans CollapseStates(
 		const StateToStateMap&      collapseMap) const;
 
 
@@ -575,27 +570,27 @@ public:   // methods
 	  Util::TranslatorWeak<StateMap>&    index) const;
 
 
-	ExplicitTreeAut ReindexStates(
+	ExplicitTreeTrans ReindexStates(
 		StateToStateTranslWeak&     stateTransl) const;
 
 
-	ExplicitTreeAut ReindexStates(
-		AbstractReindexF&           fctor,
+	ExplicitTreeTrans ReindexStates(
+		TAbstractReindexF&           fctor,
 		bool                        addFinalStates = true) const;
 
 
 	void ReindexStates(
-		ExplicitTreeAut&            dst,
-		AbstractReindexF&           fctor,
+		ExplicitTreeTrans&            dst,
+		TAbstractReindexF&           fctor,
 		bool                        addFinalStates = true) const;
 
 
 	void CopyTransitionsFrom(
-		const ExplicitTreeAut&      src,
+		const ExplicitTreeTrans&      src,
 		AbstractCopyF&              fctor);
 
 
-	ExplicitTreeAut RemoveUnreachableStates(
+	ExplicitTreeTrans RemoveUnreachableStates(
 		StateToStateMap*            pTranslMap = nullptr) const;
 
 
@@ -603,16 +598,16 @@ public:   // methods
 		class Rel,
 		class Index = Util::IdentityTranslator<AutBase::StateType>
 	>
-	ExplicitTreeAut RemoveUnreachableStates(
+	ExplicitTreeTrans RemoveUnreachableStates(
 		const Rel&                           rel,
 		const Index&                         index = Index()) const;
 
 
-	ExplicitTreeAut RemoveUselessStates(
+	ExplicitTreeTrans RemoveUselessStates(
 		StateToStateMap*          pTranslMap = nullptr) const;
 
 
-	ExplicitTreeAut GetCandidateTree() const;
+	ExplicitTreeTrans GetCandidateTree() const;
 
 
 	void SetAlphabet(AlphabetType& alphabet);
@@ -746,9 +741,9 @@ public:   // methods
 	 * @returns  An automaton accepting the union of languages of @p lhs and @p
 	 * rhs
    */
-	static ExplicitTreeAut Union(
-		const ExplicitTreeAut&                lhs,
-		const ExplicitTreeAut&                rhs,
+	static ExplicitTreeTrans Union(
+		const ExplicitTreeTrans&                lhs,
+		const ExplicitTreeTrans&                rhs,
 		StateToStateMap*                      pTranslMapLhs = nullptr,
 		StateToStateMap*                      pTranslMapRhs = nullptr);
 
@@ -765,9 +760,9 @@ public:   // methods
 	 * @returns  An automaton accepting the union of languages of @p lhs and @p
 	 * rhs
    */
-	static ExplicitTreeAut UnionDisjointStates(
-		const ExplicitTreeAut&           lhs,
-		const ExplicitTreeAut&           rhs);
+	static ExplicitTreeTrans UnionDisjointStates(
+		const ExplicitTreeTrans&           lhs,
+		const ExplicitTreeTrans&           rhs);
 
 
 	/**
@@ -783,9 +778,9 @@ public:   // methods
 	 * @returns  An automaton accepting the intersection of languages of @p lhs
 	 * and @p rhs
      */
-	static ExplicitTreeAut Intersection(
-		const ExplicitTreeAut&            lhs,
-		const ExplicitTreeAut&            rhs,
+	static ExplicitTreeTrans Intersection(
+		const ExplicitTreeTrans&            lhs,
+		const ExplicitTreeTrans&            rhs,
 		AutBase::ProductTranslMap*        pTranslMap = nullptr);
 
 
@@ -802,9 +797,9 @@ public:   // methods
 	 * @returns  An automaton accepting the intersection of languages of @p lhs
 	 * and @p rhs
      */
-	static ExplicitTreeAut IntersectionBU(
-		const ExplicitTreeAut&            lhs,
-		const ExplicitTreeAut&            rhs,
+	static ExplicitTreeTrans IntersectionBU(
+		const ExplicitTreeTrans&            lhs,
+		const ExplicitTreeTrans&            rhs,
 		AutBase::ProductTranslMap*        pTranslMap = nullptr);
 
 
@@ -823,8 +818,8 @@ public:   // methods
 	 *           of @p bigger, @p false otherwise
 	 */
 	static bool CheckInclusion(
-		const ExplicitTreeAut&                 smaller,
-		const ExplicitTreeAut&                 bigger,
+		const ExplicitTreeTrans&                 smaller,
+		const ExplicitTreeTrans&                 bigger,
 		const VATA::InclParam&                 params);
 
 
@@ -841,8 +836,8 @@ public:   // methods
 	 *           of @p bigger, @p false otherwise
 	 */
 	static bool CheckInclusion(
-		const ExplicitTreeAut&                 smaller,
-		const ExplicitTreeAut&                 bigger);
+		const ExplicitTreeTrans&                 smaller,
+		const ExplicitTreeTrans&                 bigger);
 
 
 	/**
@@ -869,7 +864,7 @@ public:   // methods
 	 *
 	 * @returns  The complement of the automaton
 	 */
-	ExplicitTreeAut Complement() const;
+	ExplicitTreeTrans Complement() const;
 
 
 	/**
@@ -892,10 +887,17 @@ public:   // methods
 	 *
 	 * @returns  The automaton with symbols in transitions changed
 	 */
-	ExplicitTreeAut TranslateSymbols(
+	ExplicitTreeTrans TranslateSymbols(
 		AbstractSymbolTranslateF&       transl) const;
 
 	std::string ToString(const Transition& trans) const;
+
+	VATA::ExplicitTreeAut Apply(VATA::ExplicitTreeAut& aut,
+							bool                       backward = false,
+							VATA::AutBase::StateDict*  stateDictApply = nullptr,
+							VATA::AutBase::StateDict*  stateDictTrans = nullptr,
+							VATA::AutBase::StateDict*  stateDictAut = nullptr);
+
 };
 
 #endif
