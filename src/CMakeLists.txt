@@ -19,6 +19,7 @@ set(basic_c_compiler_flags_list
 set(basic_cxx_compiler_add_flags_list
   -std=c++11
   -Wctor-dtor-privacy
+  -D FORESTER
   -Weffc++
   -fPIC
   -Woverloaded-virtual
@@ -95,6 +96,11 @@ add_library(libvata STATIC
 	explicit_finite_compl.cc
 	explicit_finite_sim.cc
 	explicit_tree_aut_core.cc
+    explicit_tree_trans.cc
+    explicit_tree_trans_core.cc
+    explicit_tree_trans_union.cc
+    explicit_tree_trans_core.cc
+    vata_abstraction.cc
 	explicit_tree_comp_down.cc
 	explicit_tree_incl_down.cc
 	explicit_tree_incl_up.cc
@@ -120,8 +126,7 @@ add_library(libvata STATIC
 	sym_var_asgn.cc
 	symbolic_tree_aut_base_core.cc
   ${FLEX_timbuk_scanner_OUTPUTS}
-  ${BISON_timbuk_parser_OUTPUTS}
-)
+  ${BISON_timbuk_parser_OUTPUTS})
 set_target_properties(libvata PROPERTIES
   OUTPUT_NAME vata
   CLEAN_DIRECT_OUTPUT 1
