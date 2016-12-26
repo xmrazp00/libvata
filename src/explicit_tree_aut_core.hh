@@ -368,6 +368,8 @@ GCC_DIAG_ON(effc++)
 	friend class ExplicitTreeAutCoreUtil::DownAccessor;
 	friend class ExplicitTreeAutCoreUtil::DownAccessorIterator;
 
+	friend class ExplicitTreeTransCore;
+
 public:   // data types
 
 	using SymbolType       = ExplicitTreeAut::SymbolType;
@@ -714,7 +716,7 @@ protected:// methods
 			StateTuple children;
 			for (const AutDescription::State& c : childrenStr)
 			{ // for all children states
-				children.push_back(stateTransl(c));
+                children.push_back(stateTransl(c));
 			}
 
 			this->AddTransition(
@@ -754,6 +756,8 @@ protected:// methods
 				tupleStr.push_back(stateTransl(s));
 			}
 
+(*symbolTransl)(t.GetSymbol()).symbolStr;
+				stateTransl(t.GetParent());
 			AutDescription::Transition trans(
 				tupleStr,
 				(*symbolTransl)(t.GetSymbol()).symbolStr,

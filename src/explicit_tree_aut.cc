@@ -788,3 +788,13 @@ ExplicitTreeAut ExplicitTreeAut::Complement() const
 
 	return ExplicitTreeAut(core_->Complement());
 }
+
+VATA::ExplicitTreeAutCore ExplicitTreeAut::GetCore()
+{
+    return *this->core_;
+}
+
+VATA::ExplicitTreeAutCore ExplicitTreeAut::GetCore() const
+{
+	return *this->core_;
+}
