@@ -68,6 +68,7 @@ const char VATA_USAGE_COMMANDS[] =
 	"    cmpl    <file>          Complement automaton from <file> [experimental]\n"
 	"    union <file1> <file2>   Compute union of automata from <file1> and <file2>\n"
 	"    isect <file1> <file2>   Compute intersection of automata from <file1> and <file2>\n"
+	"    apply <aut>   <trans>   Apply transducer <trans> on automata <aut>\n"
 	"    sim <file>              Computes a simulation relation for the automaton in <file>\n"
 	"      Options: tree automata: 'dir=down' : downward simulation (default)\n"
 	"                              'dir=up'   : upward simulation\n"
@@ -162,8 +163,6 @@ int performOperationApply(const Arguments&        args,
             VATA::Util::ReadFile(args.fileName1),
             stateDict1);
 
-    std::cout << autInput1.DumpToString(serializer, stateDict1) << std::endl;
-
     //need to set alphabet in order to share symbols between aut and trans classes
     transInput2.SetAlphabet(autInput1.GetAlphabet());
 
@@ -171,8 +170,6 @@ int performOperationApply(const Arguments&        args,
             parser,
             VATA::Util::ReadFile(args.fileName2),
             stateDict2);
-
-    std::cout << transInput2.DumpToString(serializer, stateDict2) << std::endl;
 
     clock_gettime(CLOCK_THREAD_CPUTIME_ID, &startTime);     // set the timer
 
