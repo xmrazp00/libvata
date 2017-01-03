@@ -177,6 +177,7 @@ endif()
 
 # Process subdirectories
 add_subdirectory(src)
+include_directories(include/vata)
 add_subdirectory(cli)
-add_subdirectory(unit_tests)
+#add_subdirectory(unit_tests)
 add_subdirectory(tests)
