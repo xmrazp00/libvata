@@ -1,0 +1,44 @@
+Ops           
+Automaton     aut
+States        qC qN qEl qU qJel qCh
+Final States  qEl qCh
+Transitions
+cc/cc         -> qC
+cc/ee         -> qJel
+nn/nn         -> qN
+ee/ee         -> qEl
+c/c (qC, qC)  -> qC
+c/c (qC, qN)  -> qC
+c/c (qN, qC)  -> qC
+c/e (qC, qN)  -> qJel
+c/e (qC, qC)  -> qJel
+c/e (qN, qC)  -> qJel
+n/n (qN, qN)  -> qN
+u/u (qU, qU)  -> qU
+u/u (qN, qU)  -> qU
+u/u (qU, qN)  -> qU
+u/u (qU, qC)  -> qU
+u/u (qC, qU)  -> qU
+u/u (qC, qC)  -> qU
+u/u (qN, qN)  -> qU
+u/u (qN, qC)  -> qU
+u/u (qC, qN)  -> qU
+u/u (qCh, qU)  -> qCh
+u/u (qU, qCh)  -> qCh
+u/u (qCh, qN)  -> qCh
+u/u (qN, qCh)  -> qCh
+u/u (qCh, qC)  -> qCh
+u/u (qC, qCh)  -> qCh
+u/c (qC, qC)  -> qCh
+u/c (qN, qC)  -> qCh
+u/c (qC, qN)  -> qCh
+u/n (qN, qN)  -> qCh
+e/e (qN, qEl)  -> qEl
+e/e (qEl, qN)  -> qEl
+e/e (qEl, qC)  -> qEl
+e/e (qC, qEl)  -> qEl
+e/e (qN, qJel)  -> qEl
+e/e (qJel, qN)  -> qEl
+e/e (qJel, qC)  -> qEl
+e/e (qC, qJel)  -> qEl
+

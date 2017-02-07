@@ -1,0 +1,11 @@
+Ops           
+Automaton     aut
+States        q0 q1 q2
+Final States  q2
+Transitions
+a/e           -> q0
+b/e           -> q1
+c/f (q0, q1)  -> q2
+c/f (q1, q0)  -> q2
+
+

@@ -1,0 +1,8 @@
+Ops            
+Automaton     aut
+States        p0 p1
+Final States  p1
+Transitions
+a          -> p0
+b(p0,p0)   -> p1
+

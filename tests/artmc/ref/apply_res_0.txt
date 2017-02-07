@@ -1,0 +1,44 @@
+Ops 
+Automaton anonymous
+States 
+Final States qCh_p0 
+Transitions
+cc -> qC_p0
+ee -> qJel_p0
+nn -> qN_p1
+c(qC_p0, qC_p0) -> qCh_p0
+u(qC_p0, qC_p0) -> qU_p0
+u(qC_p0, qCh_p0) -> qCh_p0
+u(qC_p0, qCh_p1) -> qCh_p0
+c(qC_p0, qN_p1) -> qCh_p0
+u(qC_p0, qN_p1) -> qU_p0
+u(qC_p0, qU_p0) -> qU_p0
+u(qC_p0, qU_p1) -> qU_p0
+u(qCh_p0, qC_p0) -> qCh_p0
+u(qCh_p0, qN_p1) -> qCh_p0
+u(qCh_p0, qU_p0) -> qCh_p0
+u(qCh_p0, qU_p1) -> qCh_p0
+u(qCh_p1, qC_p0) -> qCh_p0
+u(qCh_p1, qN_p1) -> qCh_p1
+u(qCh_p1, qU_p0) -> qCh_p0
+u(qCh_p1, qU_p1) -> qCh_p1
+c(qN_p1, qC_p0) -> qCh_p0
+u(qN_p1, qC_p0) -> qU_p0
+u(qN_p1, qCh_p0) -> qCh_p0
+u(qN_p1, qCh_p1) -> qCh_p1
+n(qN_p1, qN_p1) -> qCh_p1
+u(qN_p1, qN_p1) -> qU_p1
+u(qN_p1, qU_p0) -> qU_p0
+u(qN_p1, qU_p1) -> qU_p1
+u(qU_p0, qC_p0) -> qU_p0
+u(qU_p0, qCh_p0) -> qCh_p0
+u(qU_p0, qCh_p1) -> qCh_p0
+u(qU_p0, qN_p1) -> qU_p0
+u(qU_p0, qU_p0) -> qU_p0
+u(qU_p0, qU_p1) -> qU_p0
+u(qU_p1, qC_p0) -> qU_p0
+u(qU_p1, qCh_p0) -> qCh_p0
+u(qU_p1, qCh_p1) -> qCh_p1
+u(qU_p1, qN_p1) -> qU_p1
+u(qU_p1, qU_p0) -> qU_p0
+u(qU_p1, qU_p1) -> qU_p1

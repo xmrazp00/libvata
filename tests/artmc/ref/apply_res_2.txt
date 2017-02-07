@@ -1,0 +1,9 @@
+Ops 
+Automaton anonymous
+States 
+Final States q2_p2 
+Transitions
+e -> q0_p0
+e -> q1_p1
+f(q0_p0, q1_p1) -> q2_p2
+f(q1_p1, q0_p0) -> q2_p2
