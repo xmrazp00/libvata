@@ -25,8 +25,10 @@
 #include <unordered_set>
 #include <iostream>
 
+#include <vata/aut_base.hh>
 #include "explicit_tree_aut_core.hh"
-#include <vata/explicit_tree_trans.hh>
+#include "expl_bu_index.hh"
+
 
 class VATAAbstraction
 {
@@ -173,6 +175,16 @@ private:
 		std::unordered_map<size_t,size_t>&         result,
 		const std::unordered_set<size_t>&          usedStates);
 
+
+    /*
+     *  PREDICATE ABSTRACTION
+     */
+
+    static StateType GetLastIndex(
+            const std::vector<VATA::ExplicitTreeAutCore>&          auts
+    );
+
+
 public:
 	static VATA::ExplicitTreeAutCore GetHeightAbstraction(
 			const VATA::ExplicitTreeAutCore&			aut,
@@ -203,6 +215,23 @@ public:
         }
 		return res;
 	}
+
+    /*
+     *  PREDICATE ABSTRACTION
+     */
+
+
+    static std::vector<VATA::ExplicitTreeAutCore> AddNewPreditace(
+            std::vector<VATA::ExplicitTreeAutCore>&                 predicates,
+            VATA::ExplicitTreeAutCore&                              newPredicate
+    );
+
+    static VATA::ExplicitTreeAutCore GetPredicateAbstraction(
+            const VATA::ExplicitTreeAutCore&                    aut,
+            const std::vector<VATA::ExplicitTreeAutCore>&       predicates
+    );
+
+
 };
 
 #endif

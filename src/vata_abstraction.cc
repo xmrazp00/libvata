@@ -19,6 +19,9 @@
 
 #include "vata_abstraction.hh"
 
+
+#define FIRST_STATE 0
+
 bool VATAAbstraction::statesInRel(
 			const size_t                             state1,
 			const size_t                             state2,
@@ -68,6 +71,74 @@ void VATAAbstraction::completeSymmetricIndex(
 		}
     }
 }
+
+StateType VATAAbstraction::GetLastIndex(
+        const std::vector<VATA::ExplicitTreeAutCore>&       auts
+)
+{
+    StateType lastState = FIRST_STATE;
+
+    for(size_t i = 0; i < auts.size(); i++)
+    {
+        const VATA::ExplicitTreeAutCore& currentAut = auts.at(i);
+
+        for(const size_t& currentState : currentAut.GetUsedStates())
+        {
+            if(currentState > lastState)
+            {
+                lastState = currentState;
+            }
+        }
+    }
+
+    return lastState;
+}
+
+
+std::vector<VATA::ExplicitTreeAutCore>
+VATAAbstraction::AddNewPreditace(std::vector<VATA::ExplicitTreeAutCore> &predicates,
+                                 VATA::ExplicitTreeAutCore &newPredicate)
+{
+    if (predicates.size() == 0)
+    {
+        predicates.push_back(newPredicate);
+    }
+    else
+    {
+        StateType firstStateToReindex = GetLastIndex(predicates);
+
+        std::unordered_map<StateType, StateType>    translMap;
+
+        for(const StateType& state : newPredicate.GetUsedStates())
+        {
+            translMap.at(state) = ++firstStateToReindex;
+        }
+
+        newPredicate.ReindexStates(translMap);
+        predicates.push_back(newPredicate);
+    }
+
+    return predicates;
+}
+
+
+
+VATA::ExplicitTreeAutCore VATAAbstraction::GetPredicateAbstraction(const VATA::ExplicitTreeAutCore &aut,
+                                                                   const std::vector<VATA::ExplicitTreeAutCore> &predicates)
+{
+    VATA::AutBase::ProductTranslMap buIsectTranslMap;
+
+    for(const VATA::ExplicitTreeAutCore& currentAut : predicates)
+    {
+        VATA::ExplicitTreeAutCore::IntersectionBU(currentAut, aut, &buIsectTranslMap);
+    }
+
+
+
+}
+
+
+
 
 
 
