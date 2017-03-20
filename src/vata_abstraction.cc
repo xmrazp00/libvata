@@ -19,6 +19,7 @@
 
 #include "vata_abstraction.hh"
 
+#include <unordered_set>
 
 #define FIRST_STATE 0
 
@@ -126,14 +127,67 @@ VATAAbstraction::AddNewPreditace(std::vector<VATA::ExplicitTreeAutCore> &predica
 VATA::ExplicitTreeAutCore VATAAbstraction::GetPredicateAbstraction(const VATA::ExplicitTreeAutCore &aut,
                                                                    const std::vector<VATA::ExplicitTreeAutCore> &predicates)
 {
+    VATA::ExplicitTreeAutCore result;
+    VATA::ExplicitTreeAutCore resAut;
+
+    //translation map shared between each precicate-automata
     VATA::AutBase::ProductTranslMap buIsectTranslMap;
 
+    //bottom-up iset for each predicate automata
     for(const VATA::ExplicitTreeAutCore& currentAut : predicates)
     {
         VATA::ExplicitTreeAutCore::IntersectionBU(currentAut, aut, &buIsectTranslMap);
     }
 
+    std::unordered_map<StateType, std::unordered_set<StateType>> stateToSetOfStatesMap;
 
+    //fullfil the hash table stateToSetOfStatesMap : [state] -> [set_of_states]
+    for(const auto& item : buIsectTranslMap)
+    {
+        StateType left = item.first.first;
+        StateType right = item.first.second;
+
+        if (stateToSetOfStatesMap.find(left) == stateToSetOfStatesMap.end())
+        {
+            stateToSetOfStatesMap[left] = std::unordered_set<StateType>();
+        }
+
+        stateToSetOfStatesMap[left].insert(right);
+    }
+
+    std::unordered_map<StateType, StateType> stateToStateMap;
+
+    //create equivalence groups
+    for (const StateType state1 : aut.GetUsedStates())
+    {
+        for (const StateType state2 : aut.GetUsedStates())
+        {
+            if (stateToSetOfStatesMap.find(state1) == stateToSetOfStatesMap.find(state2))
+            {
+                stateToStateMap[state2] = state1;
+            }
+        }
+    }
+
+    //map equivalence groups into the new automata
+    for (const VATA::ExplicitTreeAutCoreUtil::Transition& t : aut)
+    {
+        VATA::ExplicitTreeAutCore::StateTuple ChildrenTuple;
+
+        for (const VATA::ExplicitTreeAutCore::StateType& s : t.GetChildren())
+        {
+            ChildrenTuple.push_back(stateToStateMap[s]);
+        }
+
+        resAut.AddTransition(ChildrenTuple, t.GetSymbol(), stateToStateMap[t.GetParent()]);
+    }
+
+    for(auto& st : aut.GetFinalStates())
+    {
+        resAut.SetStateFinal(stateToStateMap[st]);
+    }
+
+    return resAut;
 
 }
 

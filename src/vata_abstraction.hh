@@ -192,7 +192,7 @@ public:
 
 	{
 		VATA::ExplicitTreeAutCore res(aut, false, false);
-		res.SetAlphabet(aut.GetAlphabet());
+		res.SetAlphabet(aut.GetAlphabet());  ///needed ??
 
 		std::unordered_map<size_t, size_t> ResultMap;
 		VATAAbstraction::heightAbstraction(aut, ResultMap, height);
