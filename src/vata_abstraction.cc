@@ -107,21 +107,18 @@ VATAAbstraction::AddNewPreditace(std::vector<VATA::ExplicitTreeAutCore> &predica
     else
     {
         StateType firstStateToReindex = GetLastIndex(predicates);
-
         std::unordered_map<StateType, StateType>    translMap;
 
         for(const StateType& state : newPredicate.GetUsedStates())
         {
-            translMap.at(state) = ++firstStateToReindex;
+            translMap[state] = ++firstStateToReindex;
         }
 
         newPredicate.ReindexStates(translMap);
         predicates.push_back(newPredicate);
     }
-
     return predicates;
 }
-
 
 
 VATA::ExplicitTreeAutCore VATAAbstraction::GetPredicateAbstraction(const VATA::ExplicitTreeAutCore &aut,

@@ -8,6 +8,8 @@
 #include <vata/parsing/timbuk_parser.hh>
 #include <vata/serialization/timbuk_serializer.hh>
 
+#include "VataArtmc.hh"
+
 //declaration for backward run
 bool backwardRun(VATA::ExplicitTreeAut& AutAlpha,
                  VATA::ExplicitTreeTrans& transducer,
@@ -124,107 +126,7 @@ int main()
     transTransitions.SetAlphabet(AutAlpha.GetAlphabet());
     transTransitions.LoadFromString(*parser, transition, stateDictTrans);
 
-    VATA::AutBase::StateDict stateDictAlpha = VATA::AutBase::StateDict(stateDictInit);
-    VATA::AutBase::StateDict stateDictFixpoint = VATA::AutBase::StateDict(stateDictInit);
-
-    //Definition of fixpoint automaton and stack for backward run
-    VATA::ExplicitTreeAut autFixpoint (autInit);
-    std::vector<VATA::ExplicitTreeAut> autStack;
-
-    //Main loop ARTMC
-    bool fixpoint = false;
-    int n = 0;
-    int height = 1;
-
-    while(!fixpoint)
-    {
-        //Push actual aut alpha to stack - each round
-        autStack.push_back(AutAlpha);
-        VATA::AutBase::StateDict stateDictTmp;
-
-        //checking whether aut alpha has empty intersection with bad states automaton
-        //if it is not empty, trigger backward run, which has 2 cases : 1)return value is true - exists real counterexample
-        //2)return value is false - counterexample was spurious, increasing height of abstraction
-        if(!VATA::ExplicitTreeAut::Intersection(AutAlpha, BadStates).IsLangEmpty())
-        {
-            AutAlpha = VATA::ExplicitTreeAut::Intersection(AutAlpha, BadStates);
-
-            if((n == 0 && height == 1) ||
-               backwardRun(AutAlpha, transTransitions, autStack))
-            {
-                std::cout << "Result: Real counterexample." << std::endl;
-                break;
-            }
-            else
-            {
-                std::cout << "Info: Increase height on " << height + 1 << " after " << n + 1<< " steps." << std::endl;
-
-                autStack.clear();
-                AutAlpha = Automaton(autInit);
-                autFixpoint.Clear();
-                stateDictFixpoint = VATA::AutBase::StateDict();
-
-                height++;
-                n = 0;
-                continue;
-            }
-        }
-
-        //make abstraction and apply transducer
-        AutAlpha = Automaton(VATAAbstraction::GetHeightAbstraction(AutAlpha.GetCore(), height));
-        AutAlpha = transTransitions.Apply(AutAlpha, false, &stateDictTmp, &stateDictTrans);
-        stateDictAlpha = stateDictTmp;
-
-        //checking whether abstraction and apply brings some new state/states
-        //if so, fixpoint was reached, end of computation
-        if(VATA::ExplicitTreeAut::CheckInclusion(AutAlpha, autFixpoint))
-        {
-            std::cout << "Result:  Fixpoint reached after " << n + 1 << " steps." << std::endl;
-            fixpoint = true;
-        }
-        else
-        {
-            Automaton::StateToStateMap stateTranslMap1;
-            Automaton::StateToStateMap stateTranslMap2;
-
-            autFixpoint = VATA::ExplicitTreeAut::Union(AutAlpha, autFixpoint, &stateTranslMap1, &stateTranslMap2);
-            stateDictFixpoint =
-                    VATA::Util::CreateUnionStringToStateMap(stateDictAlpha, stateDictFixpoint, &stateTranslMap1, &stateTranslMap2);
-        }
-
-        //removing useless and unreachable states - works also without them
-        AutAlpha = AutAlpha.RemoveUselessStates();
-        AutAlpha = AutAlpha.RemoveUnreachableStates();
-
-        n++;
-    }
+    std::cout << "Result  : " << VATA::ARTMC::artmcPredicate(AutAlpha, BadStates, transTransitions) << std::endl;
 
     return 0;
-}
-
-//Definition of backward run
-bool backwardRun(VATA::ExplicitTreeAut& AutAlpha,
-                 VATA::ExplicitTreeTrans& transducer,
-                 const std::vector<VATA::ExplicitTreeAut>& autStack)
-{
-    int h = autStack.size();
-
-    while(h)
-    {
-        VATA::ExplicitTreeAut StoredAut = autStack.at(h - 1);
-
-        AutAlpha = transducer.Apply(AutAlpha, true);              //without dicts...
-
-        AutAlpha = VATA::ExplicitTreeAut::Intersection(StoredAut, AutAlpha);
-
-        AutAlpha = AutAlpha.RemoveUselessStates();
-        AutAlpha = AutAlpha.RemoveUnreachableStates();
-
-        if(AutAlpha.IsLangEmpty())
-        {
-            return false;
-        }
-        h--;
-    }
-    return true;
 }

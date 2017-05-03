@@ -103,7 +103,8 @@ const char* transition =
 
 int main()
 {
-    std::cout << "Result : " << VATA::ARTMC::artmc(Init, Bad1, transition) << std::endl;
+    std::cout << "Result height abstraction    : " << VATA::ARTMC::artmc(Init, Bad1, transition) << std::endl;
+    std::cout << "Result predicate abstraction : " << VATA::ARTMC::artmcPredicate(Init, Bad1, transition) << std::endl;
 
     return 0;
 }
