@@ -78,7 +78,7 @@ bool VATA::ARTMC::artmc(const VATA::ExplicitTreeAut &a_InitAut, const VATA::Expl
             }
             else
             {
-                //std::cout << "Info: Increase height on " << height + 1 << " after " << n + 1 << " steps." << std::endl;
+                std::cout << "Info: Increase height on " << height + 1 << " after " << n + 1 << " steps." << std::endl;
 
                 autStack.clear();
                 AutAlpha = Automaton(autInit);
@@ -98,7 +98,7 @@ bool VATA::ARTMC::artmc(const VATA::ExplicitTreeAut &a_InitAut, const VATA::Expl
         //if so, fixpoint was reached, end of computation
         if(VATA::ExplicitTreeAut::CheckInclusion(AutAlpha, autFixpoint))
         {
-            //std::cout << "Result:  Fixpoint reached after " << n + 1<< " steps." << std::endl;
+            std::cout << "Result :  Fixpoint reached after " << n + 1<< " steps." << std::endl;
             fixpoint = true;
         }
         else
@@ -184,11 +184,13 @@ bool VATA::ARTMC::artmcPredicate(const VATA::ExplicitTreeAut &a_InitAut, const V
             }
             else
             {
-                //std::cout << "Info: Increase height on " << height + 1 << " after " << n + 1 << " steps." << std::endl;
-
                 if(!newPredicate.IsLangEmpty()) //correct condition ??
                 {
-                    std::cout << "Predicate : Added new predicate ..." << std::endl;
+                    std::cout << "Info : Adding new predicate" << std::endl;
+
+                    newPredicate = newPredicate.RemoveUnreachableStates();
+                    newPredicate = newPredicate.RemoveUselessStates();
+
                     VATAAbstraction::AddNewPreditace(predicates, newPredicate);
                 }
 
@@ -209,7 +211,7 @@ bool VATA::ARTMC::artmcPredicate(const VATA::ExplicitTreeAut &a_InitAut, const V
         //if so, fixpoint was reached, end of computation
         if(VATA::ExplicitTreeAut::CheckInclusion(AutAlpha, autFixpoint))
         {
-            //std::cout << "Result:  Fixpoint reached after " << n + 1<< " steps." << std::endl;
+            std::cout << "Result:  Fixpoint reached after " << n + 1<< " steps." << std::endl;
             fixpoint = true;
         }
         else
@@ -253,7 +255,7 @@ bool VATA::ARTMC::artmcPredicate(const std::string a_InitStr, const std::string 
     transTransitions.SetAlphabet(AutInit.GetAlphabet());
     transTransitions.LoadFromString(*parser, a_TransitionsStr, stateDictTrans);
 
-    return artmc(AutInit, BadStates, transTransitions);
+    return artmcPredicate(AutInit, BadStates, transTransitions);
 }
 
 //Definition of backward run
@@ -264,7 +266,7 @@ bool backwardRun(VATA::ExplicitTreeAut& AutAlpha,
 {
     int h = autStack.size();
     VATA::ExplicitTreeAutCore newPredicate;
-    
+
     while(h)
     {
         VATA::ExplicitTreeAut StoredAut = autStack.at(h - 1);
@@ -286,7 +288,7 @@ bool backwardRun(VATA::ExplicitTreeAut& AutAlpha,
             return false;
         }
 
-        newPredicate = AutAlpha.GetCore();
+        newPredicate = VATA::ExplicitTreeAutCore(AutAlpha.GetCore());
         h--;
     }
     return true;

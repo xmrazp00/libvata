@@ -28,7 +28,7 @@ bool VATAAbstraction::statesInRel(
 			const size_t                             state2,
 			const std::unordered_map<size_t,size_t>& tmp)
 {
-    
+
 		if (tmp.size() == 0)
 		{ // all states in a relation
 			return true;
@@ -106,25 +106,57 @@ VATAAbstraction::AddNewPreditace(std::vector<VATA::ExplicitTreeAutCore> &predica
     }
     else
     {
+        newPredicate.RemoveUselessStates();
+        newPredicate.RemoveUnreachableStates();
+
         StateType firstStateToReindex = GetLastIndex(predicates);
+        //std::cout << "LAST INDEX : " << firstStateToReindex << std::endl;
         std::unordered_map<StateType, StateType>    translMap;
 
+        //std::cout << "BEFORE TRANSL : " << std::endl;
         for(const StateType& state : newPredicate.GetUsedStates())
         {
+            //std::cout << "TRANSL MAP : " << state << " -> " << firstStateToReindex+1 << std::endl;
             translMap[state] = ++firstStateToReindex;
         }
+        //std::cout << "AFTER TRANSL : " << std::endl;
 
-        newPredicate.ReindexStates(translMap);
+        newPredicate = newPredicate.ReindexStates(translMap);
         predicates.push_back(newPredicate);
     }
+
+
     return predicates;
 }
 
+StateType GetMappedState(std::unordered_map<StateType,StateType>& map, StateType state)
+{
+    if(map.find(state) == map.end())
+    {
+        return state;
+    }
+
+    bool notFound = false;
+    StateType actualState = state;
+
+    while(!notFound)
+    {
+        if(map.find(actualState) != map.end())
+        {
+            actualState = map[actualState];
+        }
+        else
+        {
+            notFound = true;
+        }
+    }
+
+    return actualState;
+}
 
 VATA::ExplicitTreeAutCore VATAAbstraction::GetPredicateAbstraction(const VATA::ExplicitTreeAutCore &aut,
                                                                    const std::vector<VATA::ExplicitTreeAutCore> &predicates)
 {
-    VATA::ExplicitTreeAutCore result;
     VATA::ExplicitTreeAutCore resAut;
 
     //translation map shared between each precicate-automata
@@ -133,16 +165,21 @@ VATA::ExplicitTreeAutCore VATAAbstraction::GetPredicateAbstraction(const VATA::E
     //bottom-up iset for each predicate automata
     for(const VATA::ExplicitTreeAutCore& currentAut : predicates)
     {
-        VATA::ExplicitTreeAutCore::IntersectionBU(currentAut, aut, &buIsectTranslMap);
+        VATA::AutBase::ProductTranslMap tmpMap;
+
+        VATA::ExplicitTreeAutCore::IntersectionBU(currentAut, aut, &tmpMap);
+
+        buIsectTranslMap.insert(tmpMap.begin(), tmpMap.end());
     }
 
     std::unordered_map<StateType, std::unordered_set<StateType>> stateToSetOfStatesMap;
 
+
     //fullfil the hash table stateToSetOfStatesMap : [state] -> [set_of_states]
     for(const auto& item : buIsectTranslMap)
     {
-        StateType left = item.first.first;
-        StateType right = item.first.second;
+        StateType right = item.first.first; //lhs
+        StateType left = item.first.second; //rhs
 
         if (stateToSetOfStatesMap.find(left) == stateToSetOfStatesMap.end())
         {
@@ -152,6 +189,14 @@ VATA::ExplicitTreeAutCore VATAAbstraction::GetPredicateAbstraction(const VATA::E
         stateToSetOfStatesMap[left].insert(right);
     }
 
+    for(const auto& item : aut.GetUsedStates())
+    {
+        if(stateToSetOfStatesMap.find(item) == stateToSetOfStatesMap.end())
+        {
+            stateToSetOfStatesMap[item] = std::unordered_set<StateType>();
+        }
+    }
+
     std::unordered_map<StateType, StateType> stateToStateMap;
 
     //create equivalence groups
@@ -159,12 +204,28 @@ VATA::ExplicitTreeAutCore VATAAbstraction::GetPredicateAbstraction(const VATA::E
     {
         for (const StateType state2 : aut.GetUsedStates())
         {
-            if (stateToSetOfStatesMap.find(state1) == stateToSetOfStatesMap.find(state2))
+
+            if ((stateToSetOfStatesMap.find(state1)->second == stateToSetOfStatesMap.find(state2)->second) &&
+                    state1 != state2)
             {
-                stateToStateMap[state2] = state1;
+                if(aut.IsStateFinal(state1) != aut.IsStateFinal(state2))
+                {
+                    continue;
+                }
+
+                if(state1 < state2)
+                {
+                    stateToStateMap[state1] = state2;
+                }
+                else
+                {
+                    stateToStateMap[state2] = state1;
+                }
+
             }
         }
     }
+
 
     //map equivalence groups into the new automata
     for (const VATA::ExplicitTreeAutCoreUtil::Transition& t : aut)
@@ -173,15 +234,16 @@ VATA::ExplicitTreeAutCore VATAAbstraction::GetPredicateAbstraction(const VATA::E
 
         for (const VATA::ExplicitTreeAutCore::StateType& s : t.GetChildren())
         {
-            ChildrenTuple.push_back(stateToStateMap[s]);
+            //ChildrenTuple.push_back(stateToStateMap[s]);
+            ChildrenTuple.push_back(GetMappedState(stateToStateMap, s));
         }
 
-        resAut.AddTransition(ChildrenTuple, t.GetSymbol(), stateToStateMap[t.GetParent()]);
+        resAut.AddTransition(ChildrenTuple, t.GetSymbol(), GetMappedState(stateToStateMap, t.GetParent()));
     }
 
     for(auto& st : aut.GetFinalStates())
     {
-        resAut.SetStateFinal(stateToStateMap[st]);
+        resAut.SetStateFinal(GetMappedState(stateToStateMap, st));
     }
 
     return resAut;

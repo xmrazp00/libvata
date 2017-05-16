@@ -57,11 +57,10 @@ function apply_test
   fi
 
   echo "$(tput setaf 2)transducer_apply_tests.sh (Test no. $4) Test passed. $(tput sgr0)"
-  rm -rf $ResultAut
+  rm -f $ResultAut
 }   #end of function apply_test
 
 
 apply_test Automaton_0.txt Transducer_0.txt Ref_output_0.txt 0
 apply_test Automaton_1.txt Transducer_1.txt Ref_output_1.txt 1
 apply_test Automaton_2.txt Transducer_2.txt Ref_output_2.txt 2
-apply_test Automaton_3.txt Transducer_3.txt Ref_output_3.txt 3

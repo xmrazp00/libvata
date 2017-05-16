@@ -46,8 +46,6 @@ public:
 			{
 					tmp = result;
 
-                    //std::cout << "Height is " << height << std::endl;
-
 					for (const size_t state1 : usedStates)
 					{
 							for (const size_t state2 : usedStates)
@@ -55,7 +53,7 @@ public:
 									if (VATAAbstraction::areStatesEquivalent(
 												aut, state1, state2, tmp))
 									{
-            //                                std::cout << "State : " <<  state2  << " is mapping on : " << state1 << ". " << std::endl;
+                                            //std::cout << "HEIGHT State : " <<  state2  << " is mapping on : " << state1 << ". " << std::endl;
 											result[state2] = state1;
 									}
 							}
